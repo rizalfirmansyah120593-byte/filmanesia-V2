@@ -1,66 +1,90 @@
-# 🎬 Filmanesia
+# Filmanesia
 
-<div align="center">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rizalfirmansyah120593-byte/filmanesia-V2/main/public/logo.png" alt="Filmanesia Logo" width="200"/>
+</p>
 
-**Your go-to destination for free movies and TV shows.**
+<p align="center">
+  <strong>Filmanesia</strong> adalah platform streaming film modern yang dibangun dengan teknologi mutakhir untuk memberikan pengalaman menonton terbaik bagi pengguna.
+</p>
 
-[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-
-*Streaming pengalaman menonton film tanpa batas, kapan saja, di mana saja.*
-
-</div>
+<p align="center">
+  <a href="https://filmanesia.com">
+    <img src="https://img.shields.io/badge/🚀_LIVE_DEMO-0070f3?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo"/>
+  </a>
+</p>
 
 ---
 
-## 🚀 Tentang Proyek
-**Filmanesia** adalah platform streaming film dan TV series modern yang dibangun dengan performa tinggi. Proyek ini dirancang untuk memberikan pengalaman pengguna yang intuitif, cepat, dan responsif dengan integrasi data film terkini.
+## 🚀 Fitur Utama
+*   **Katalog Film Terupdate**: Menampilkan daftar film terbaru dengan detail lengkap.
+*   **Antarmuka Responsif**: Desain yang elegan dan nyaman digunakan di perangkat mobile maupun desktop.
+*   **Mode Malam (Dark Mode)**: Mendukung kenyamanan mata saat menonton di kondisi minim cahaya.
+*   **Integrasi Supabase**: Sistem autentikasi dan manajemen database yang cepat dan aman.
+*   **Pencarian Canggih**: Memudahkan pengguna menemukan film favorit dengan cepat.
 
-## ✨ Fitur Utama
-*   **Katalog Film Terlengkap**: Akses ribuan judul film dan TV series terbaru.
-*   **Antarmuka Responsif**: Desain elegan yang dioptimalkan untuk Desktop maupun Mobile.
-*   **Mode Gelap (Dark Mode)**: Pengalaman menonton yang nyaman bagi mata.
-*   **Pencarian Pintar**: Temukan film favorit Anda dengan fitur pencarian instan.
-*   **Performa Maksimal**: Dibangun dengan Next.js untuk kecepatan loading yang luar biasa.
+## 🛠️ Teknologi yang Digunakan
+*   **Framework**: [Next.js](https://nextjs.org/)
+*   **Bahasa**: [TypeScript](https://www.typescriptlang.org/)
+*   **Database & Auth**: [Supabase](https://supabase.com/)
+*   **Styling**: Tailwind CSS
+*   **Deployment**: Vercel
 
-## 🛠️ Tech Stack
-*   **Framework**: [Next.js 14+](https://nextjs.org/)
-*   **Language**: [TypeScript](https://www.typescriptlang.org/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **Backend/Auth**: [Supabase](https://supabase.com/)
-*   **Deployment**: [Vercel](https://vercel.com/) / [Hostinger](https://www.hostinger.com/)
+## ⚙️ Cara Instalasi & Menjalankan Project
 
-## 📦 Cara Memulai
+Ikuti langkah-langkah berikut untuk menjalankan project ini di komputer lokal Anda:
 
-### Prasyarat
-Pastikan Anda sudah menginstal [Node.js](https://nodejs.org/) di komputer Anda.
+### 1. Persyaratan
+Pastikan Anda sudah menginstal:
+*   [Node.js](https://nodejs.org/) (Versi 18 ke atas disarankan)
+*   [Git](https://git-scm.com/)
 
-### Instalasi
-1. Clone repository ini:
-   ```bash
-   git clone [https://github.com/rizalfirmansyah120593-byte/filmanesia.git](https://github.com/rizalfirmansyah120593-byte/filmanesia.git)
+### 2. Kloning Repository
+```bash
+git clone [https://github.com/rizalfirmansyah120593-byte/filmanesia-V2.git](https://github.com/rizalfirmansyah120593-byte/filmanesia-V2.git)
+cd filmanesia-V2
 
-2. Masuk ke folder proyek:
-    ```bash
-    cd filmanesia
+```
 
-3. Instal dependencies:
-    ```bash
-    npm install
+### 3. Instalasi Dependency
 
-4. Jalankan server pengembangan:
-    ```bash
-    npm run dev
+```bash
+npm install
 
-### 📝 Konfigurasi Environment
-Buat file .env.local di root folder Anda dengan referensi dari .env.local.example:
-     ```bash
-    NEXT_PUBLIC_TMDB_ACCESS_TOKEN=your_token_here
-    NEXT_PUBLIC_SUPABASE_URL=your_url_here
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_key_here
-    ADSTERRA_API_KEY=your_key_here
+```
 
-### 📜 Lisensi
-Proyek ini dilisensikan di bawah MIT License.
+### 4. Konfigurasi Lingkungan
+
+Buat file `.env` di direktori utama dan isi dengan konfigurasi berikut:
+
+```env
+SUPABASE_AUTH_GOOGLE_CLIENT_ID="YOUR_CLIENT_ID"
+SUPABASE_AUTH_GOOGLE_SECRET_KEY="YOUR_SECRET_KEY"
+SUPABASE_AUTH_SMTP_HOST="YOUR_SMTP_HOST"
+SUPABASE_AUTH_SMTP_PORT="587"
+SUPABASE_AUTH_SMTP_EMAIL="your_email@example.com"
+SUPABASE_AUTH_SMTP_PASSWORD="your_password"
+NEXT_PUBLIC_ADSENSE_ID="ca-pub-XXXXXXXXXXXXXXXX"
+
+```
+
+### 5. Menjalankan Server Pengembangan
+
+```bash
+npm run dev
+
+```
+
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
+
+---
+
+## 💡 Panduan Kontribusi
+
+Kami sangat terbuka untuk kontribusi! Silakan buat *pull request* untuk fitur baru atau perbaikan bug.
+
+## 📝 Lisensi
+
+Proyek ini bersifat open-source. Silakan gunakan untuk keperluan pembelajaran.
+
+---
