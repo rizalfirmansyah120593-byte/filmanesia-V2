@@ -1,7 +1,7 @@
 # Filmanesia
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rizalfirmansyah120593-byte/filmanesia-V2/main/public/logo.png" alt="Filmanesia Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/rizalfirmansyah120593-byte/filmanesia-V2/public/logo.png" alt="Filmanesia Logo" width="200"/>
 </p>
 
 <p align="center">
