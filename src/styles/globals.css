@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "./lightbox.css";
+
+@plugin '../utils/hero.ts';
+@plugin "tailwindcss-motion";
+
+@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --animate-shine: shine 3s linear infinite;
+
+  --font-poppins: var(--font-poppins);
+
+  @keyframes shine {
+    0% {
+      background-position: 100%;
+    }
+    100% {
+      background-position: -100%;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  h1 {
+    @apply text-3xl font-black md:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl font-bold md:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl font-bold md:text-2xl;
+  }
+
+  h4 {
+    @apply text-lg font-semibold md:text-xl;
+  }
+
+  h5 {
+    @apply text-base font-medium md:text-lg;
+  }
+
+  h6 {
+    @apply text-sm font-normal md:text-base;
+  }
+
+  iframe {
+    @apply border-none;
+  }
+}
+
+@utility embla {
+  @apply overflow-hidden;
+}
+
+@utility embla__container {
+  @apply flex cursor-grab active:cursor-grabbing;
+}
+
+@utility embla__slide {
+  @apply min-w-0 flex-[0_0_100%];
+}
+
+@utility absolute-center {
+  @apply absolute! top-1/2! left-1/2! float-none! -translate-x-1/2! -translate-y-1/2!;
+}
+
+@utility movie-grid {
+  @apply grid size-full max-w-6xl grid-cols-2 justify-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-[repeat(auto-fit,minmax(200px,50px))];
+}
