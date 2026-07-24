@@ -45,6 +45,9 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  other: {
+    "google-adsense-account": "ca-pub-1868305196888351",
+  },
 };
 
 export const viewport: Viewport = {
