@@ -16,35 +16,19 @@ import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import GoogleAdSense from '@/components/GoogleAdSense';
+
 const Disclaimer = dynamic(() => import("@/components/ui/overlay/Disclaimer"));
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  applicationName: siteConfig.name,
+  // Gunakan 'template' agar judul halaman bisa berubah di setiap page
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`, 
+  },
   description: siteConfig.description,
-  manifest: "/manifest.json",
-  icons: {
-    icon: siteConfig.favicon,
-  },
-  twitter: {
-    card: "summary",
-    title: {
-      default: siteConfig.name,
-      template: siteConfig.name,
-    },
-    description: siteConfig.description,
-  },
-  openGraph: {
-    type: "website",
-    siteName: siteConfig.name,
-    title: {
-      default: siteConfig.name,
-      template: siteConfig.name,
-    },
-    description: siteConfig.description,
-  },
-  formatDetection: {
-    telephone: false,
+  // Tambahkan ini untuk mencegah masalah canonical link
+  alternates: {
+    canonical: "./",
   },
   other: {
     "google-adsense-account": "ca-pub-1868305196888351",
@@ -60,15 +44,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <body className={cn("bg-background min-h-dvh antialiased select-none", Poppins.className)}>
-        <head>
-        {/* Google tag (gtag.js) */}
+    <html suppressHydrationWarning lang="id"><body className={cn("bg-background min-h-dvh antialiased select-none", Poppins.className)}>
+        {/* Pastikan tidak ada enter atau spasi di atas baris ini */}
+        
         <Script
-          async
+          strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-5QZ4FQ33WN"
         />
-        <Script id="google-analytics">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -76,8 +59,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             gtag('config', 'G-5QZ4FQ33WN');
           `}
         </Script>
-      </head>
+
         <GoogleAdSense pId={process.env.NEXT_PUBLIC_ADSENSE_ID!} />
+        
         <Suspense>
           <NuqsAdapter>
             <Providers>
@@ -92,6 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Providers>
           </NuqsAdapter>
         </Suspense>
+        
         <SpeedInsights debug={false} />
         <Analytics debug={false} />
       </body>
