@@ -13,7 +13,7 @@ import { Movie } from "tmdb-ts/dist/types";
 const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
   const key = kebabCase(name) + "-list";
   const { ref, inViewport } = useInViewport();
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryFn: query,
     queryKey: [key],
     enabled: inViewport,
@@ -21,7 +21,7 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
 
   return (
     <section id={key} className="min-h-[250px] md:min-h-[300px]" ref={ref}>
-      {isPending ? (
+      {isLoading ? (
         <div className="flex w-full flex-col gap-5">
           <div className="flex grow items-center justify-between">
             <Skeleton className="h-7 w-40 rounded-full" />
@@ -43,18 +43,16 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
               See All &gt;
             </Link>
           </div>
-          <Carousel>
-            {data?.results.map((movie) => {
-              return (
+            <Carousel>
+              {data?.results?.map((movie, index) => (
                 <div
                   key={movie.id}
                   className="embla__slide flex min-h-fit max-w-fit items-center px-1 py-2"
                 >
-                  <MoviePosterCard movie={movie} />
+                  <MoviePosterCard movie={movie} isPriority={index === 0} />
                 </div>
-              );
-            })}
-          </Carousel>
+              ))}
+            </Carousel>
         </div>
       )}
     </section>
