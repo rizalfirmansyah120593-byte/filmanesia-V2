@@ -1,3 +1,5 @@
+"use client";
+
 import { Image } from "@heroui/image";
 import { useWindowScroll } from "@mantine/hooks";
 import { AppendToResponse } from "tmdb-ts/dist/types/options";

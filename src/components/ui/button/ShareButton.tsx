@@ -33,6 +33,7 @@ interface ShareButtonProps {
 }
 
 const HASTAGS = ["filmanesia", "free", "movies", "streaming"];
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com").replace(/\/$/, "");
 
 const SHARE_BUTTONS = [
   {
@@ -78,7 +79,9 @@ const SHARE_BUTTONS = [
 ];
 
 const ShareButton: React.FC<ShareButtonProps> = ({ title, id, type = "movie" }) => {
-  const url = `https://${location.hostname}/${type}/${id}`;
+  // `location` is unavailable during SSR. Use the configured canonical URL so
+  // the first render is deterministic and hydration-safe.
+  const url = `${SITE_URL}/${type}/${id}`;
   const description = `Check out and stream ${title} on filmanesia for FREE!!`;
 
   const [opened, { open, close }] = useDisclosure(false);
