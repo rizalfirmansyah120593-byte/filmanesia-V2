@@ -14,6 +14,13 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
+  compress: true,
+  poweredByHeader: false,
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    qualities: [50, 75],
+  },
   // https://github.com/payloadcms/payload/issues/12550#issuecomment-2939070941
   turbopack: {
     resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],

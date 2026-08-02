@@ -67,6 +67,12 @@
   iframe {
     @apply border-none;
   }
+
+  /* Keep below-the-fold carousels from competing with the first paint. */
+  main > *:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 320px;
+  }
 }
 
 @utility embla {

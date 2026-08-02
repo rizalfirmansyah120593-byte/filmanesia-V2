@@ -103,8 +103,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </NuqsAdapter>
         </Suspense>
         
-        <SpeedInsights debug={false} />
-        <Analytics debug={false} />
+        {IS_PRODUCTION && <><SpeedInsights debug={false} /><Analytics debug={false} /></>}
       </body>
     </html>
   );
