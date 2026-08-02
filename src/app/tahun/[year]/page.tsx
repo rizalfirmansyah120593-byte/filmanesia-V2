@@ -1,0 +1,5 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { tmdb } from "@/api/tmdb";
+export async function generateMetadata({ params }: { params: Promise<{ year: string }> }): Promise<Metadata> { const { year } = await params; return { title: `Film Terbaru Tahun ${year}`, description: `Daftar film terbaik dan terbaru tahun ${year} di Filmanesia.`, alternates: { canonical: `/tahun/${year}` } }; }
+export default async function YearPage({ params }: { params: Promise<{ year: string }> }) { const { year } = await params; const data = await tmdb.discover.movie({ primary_release_year: Number(year), page: 1 }).catch(() => null); return <article className="mx-auto max-w-5xl space-y-8"><header><h1 className="text-3xl font-bold">Film Tahun {year}</h1><p className="mt-3 text-muted-foreground">Koleksi film pilihan yang dirilis pada tahun {year}.</p></header><section className="grid grid-cols-2 gap-4 sm:grid-cols-4">{data?.results?.slice(0, 20).map((movie) => <Link className="rounded-lg p-2 hover:bg-muted" href={`/movie/${movie.id}`} key={movie.id}><strong>{movie.title}</strong></Link>)}</section></article>; }
