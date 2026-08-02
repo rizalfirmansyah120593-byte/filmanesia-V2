@@ -15,7 +15,6 @@ import dynamic from "next/dynamic";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
-import GoogleAdSense from '@/components/GoogleAdSense';
 
 const Disclaimer = dynamic(() => import("@/components/ui/overlay/Disclaimer"));
 
@@ -47,9 +46,6 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.description, images: ["/logo.png"] },
   icons: { icon: "/favicon.ico", apple: "/icons/ios/180.png" },
-  other: {
-    "google-adsense-account": "ca-pub-1868305196888351",
-  },
 };
 
 export const viewport: Viewport = {
@@ -86,8 +82,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           `}
         </Script>
 
-        <GoogleAdSense pId={process.env.NEXT_PUBLIC_ADSENSE_ID!} />
-        
         <Suspense>
           <NuqsAdapter>
             <Providers>

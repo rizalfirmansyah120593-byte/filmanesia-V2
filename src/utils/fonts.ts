@@ -1,13 +1,4 @@
-import { Poppins as FontPoppins, Saira as FontSaira } from "next/font/google";
-
-export const Poppins = FontPoppins({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-poppins",
-});
-
-export const Saira = FontSaira({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-saira",
-});
+// System fonts avoid a render-blocking third-party font download and make
+// production builds independent from Google Fonts availability.
+export const Poppins = { className: "font-sans" };
+export const Saira = { className: "font-sans" };
