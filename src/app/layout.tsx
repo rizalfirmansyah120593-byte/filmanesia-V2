@@ -26,10 +26,27 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`, 
   },
   description: siteConfig.description,
-  // Tambahkan ini untuk mencegah masalah canonical link
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com"),
   alternates: {
-    canonical: "./",
+    canonical: "/",
   },
+  applicationName: siteConfig.name,
+  keywords: ["filmanesia", "film terbaru", "serial TV", "film Indonesia", "movie database"],
+  authors: [{ name: "Filmanesia" }],
+  creator: "Filmanesia",
+  publisher: "Filmanesia",
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: "/",
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [{ url: "/logo.png", width: 512, height: 512, alt: "Filmanesia" }],
+  },
+  twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.description, images: ["/logo.png"] },
+  icons: { icon: "/favicon.ico", apple: "/icons/ios/180.png" },
   other: {
     "google-adsense-account": "ca-pub-1868305196888351",
   },
@@ -43,8 +60,17 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com",
+    description: siteConfig.description,
+    potentialAction: { "@type": "SearchAction", target: `${process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com"}/search?query={search_term_string}`, "query-input": "required name=search_term_string" },
+  };
   return (
     <html suppressHydrationWarning lang="id"><body className={cn("bg-background min-h-dvh antialiased select-none", Poppins.className)}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         {/* Pastikan tidak ada enter atau spasi di atas baris ini */}
         
         <Script

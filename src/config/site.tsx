@@ -15,7 +15,7 @@ import { TbFolder, TbFolderFilled } from "react-icons/tb";
 
 export const siteConfig: SiteConfigType = {
   name: "filmanesia",
-  description: "Your only choice for a free movies and tv shows streaming website.",
+  description: "Temukan film dan serial TV terbaru, populer, dan terbaik di Filmanesia.",
   favicon: "/favicon.ico",
   navItems: [
     {
