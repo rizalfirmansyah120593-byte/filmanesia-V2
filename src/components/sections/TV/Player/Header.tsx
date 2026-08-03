@@ -2,10 +2,12 @@ import { cn } from "@/utils/helpers";
 import { ArrowLeft, List, Next, Prev, Server } from "@/utils/icons";
 import ActionButton from "./ActionButton";
 import { TvShowPlayerProps } from "./Player";
+import { SubtitleLanguage } from "@/utils/players";
 
 interface TvShowPlayerHeaderProps extends Omit<TvShowPlayerProps, "episodes" | "tv" | "startAt"> {
   hidden?: boolean;
   selectedSource: number;
+  selectedSubtitle: SubtitleLanguage;
   onOpenSource: () => void;
   onOpenEpisode: () => void;
 }
@@ -17,6 +19,7 @@ const TvShowPlayerHeader: React.FC<TvShowPlayerHeaderProps> = ({
   episode,
   hidden,
   selectedSource,
+  selectedSubtitle,
   nextEpisodeNumber,
   prevEpisodeNumber,
   onOpenSource,
@@ -45,7 +48,7 @@ const TvShowPlayerHeader: React.FC<TvShowPlayerHeaderProps> = ({
           disabled={!prevEpisodeNumber}
           label="Previous Episode"
           tooltip="Previous Episode"
-          href={`/tv/${id}/${episode.season_number}/${prevEpisodeNumber}/player?src=${selectedSource}`}
+          href={`/tv/${id}/${episode.season_number}/${prevEpisodeNumber}/player?src=${selectedSource}&sub=${selectedSubtitle}`}
         >
           <Prev size={42} />
         </ActionButton>
@@ -53,7 +56,7 @@ const TvShowPlayerHeader: React.FC<TvShowPlayerHeaderProps> = ({
           disabled={!nextEpisodeNumber}
           label="Next Episode"
           tooltip="Next Episode"
-          href={`/tv/${id}/${episode.season_number}/${nextEpisodeNumber}/player?src=${selectedSource}`}
+          href={`/tv/${id}/${episode.season_number}/${nextEpisodeNumber}/player?src=${selectedSource}&sub=${selectedSubtitle}`}
         >
           <Next size={42} />
         </ActionButton>

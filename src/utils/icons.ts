@@ -29,7 +29,7 @@ import { ImCross } from "react-icons/im";
 import { IoIosClose, IoIosMail, IoIosRocket, IoIosShareAlt, IoMdHelpCircle } from "react-icons/io";
 import { IoEye, IoEyeOff, IoGrid, IoMenuOutline } from "react-icons/io5";
 import { LuHistory, LuPlay } from "react-icons/lu";
-import { MdContentCopy, MdMovie } from "react-icons/md";
+import { MdClosedCaption, MdContentCopy, MdMovie } from "react-icons/md";
 import { PiTelevisionFill } from "react-icons/pi";
 import { RiLockPasswordFill, RiRobot3Fill } from "react-icons/ri";
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
@@ -40,6 +40,7 @@ export {
   HiArrowLongLeft as ArrowLeft,
   GoArrowUpLeft as ArrowUpLeft,
   FaCalendarAlt as Calendar,
+  MdClosedCaption as Captions,
   FaCheck as Check,
   FaChevronLeft as ChevronLeft,
   FaChevronRight as ChevronRight,

@@ -1,5 +1,23 @@
 import { PlayersProps } from "@/types";
 
+export const SUBTITLE_OPTIONS = [
+  { label: "Nonaktif", value: "off" },
+  { label: "Indonesia", value: "id" },
+  { label: "English", value: "en" },
+  { label: "Malay", value: "ms" },
+  { label: "Español", value: "es" },
+  { label: "Français", value: "fr" },
+] as const;
+
+export type SubtitleLanguage = (typeof SUBTITLE_OPTIONS)[number]["value"];
+
+const addSubtitleLanguage = (source: string, subtitleLanguage: SubtitleLanguage): string => {
+  if (subtitleLanguage === "off") return source;
+
+  const separator = source.includes("?") ? "&" : "?";
+  return `${source}${separator}ds_lang=${subtitleLanguage}`;
+};
+
 /**
  * Generates a list of movie players with their respective titles and source URLs.
  * Each player is constructed using the provided movie ID.
@@ -9,7 +27,11 @@ import { PlayersProps } from "@/types";
  * @returns {PlayersProps[]} - An array of objects, each containing
  * the title of the player and the corresponding source URL.
  */
-export const getMoviePlayers = (id: string | number, startAt?: number): PlayersProps[] => {
+export const getMoviePlayers = (
+  id: string | number,
+  startAt?: number,
+  subtitleLanguage: SubtitleLanguage = "off",
+): PlayersProps[] => {
   return [
     {
       title: "VidLink",
@@ -76,30 +98,41 @@ export const getMoviePlayers = (id: string | number, startAt?: number): PlayersP
     },
     {
       title: "VidSrc 1",
-      source: `https://vidsrc.xyz/embed/movie/${id}`,
+      source: addSubtitleLanguage(`https://vidsrc.xyz/embed/movie/${id}`, subtitleLanguage),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 2",
-      source: `https://vidsrc.to/embed/movie/${id}`,
+      source: addSubtitleLanguage(`https://vidsrc.to/embed/movie/${id}`, subtitleLanguage),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 3",
-      source: `https://vidsrc.icu/embed/movie/${id}`,
+      source: addSubtitleLanguage(`https://vidsrc.icu/embed/movie/${id}`, subtitleLanguage),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 4",
-      source: `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`,
+        subtitleLanguage,
+      ),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 5",
-      source: `https://vidsrc.cc/v3/embed/movie/${id}?autoPlay=false`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.cc/v3/embed/movie/${id}?autoPlay=false`,
+        subtitleLanguage,
+      ),
       recommended: true,
       fast: true,
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "MoviesAPI",
@@ -125,6 +158,7 @@ export const getTvShowPlayers = (
   season: number,
   episode: number,
   startAt?: number,
+  subtitleLanguage: SubtitleLanguage = "off",
 ): PlayersProps[] => {
   return [
     {
@@ -192,30 +226,50 @@ export const getTvShowPlayers = (
     },
     {
       title: "VidSrc 1",
-      source: `https://vidsrc.xyz/embed/tv/${id}/${season}/${episode}`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.xyz/embed/tv/${id}/${season}/${episode}`,
+        subtitleLanguage,
+      ),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 2",
-      source: `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`,
+        subtitleLanguage,
+      ),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 3",
-      source: `https://vidsrc.icu/embed/tv/${id}/${season}/${episode}`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.icu/embed/tv/${id}/${season}/${episode}`,
+        subtitleLanguage,
+      ),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 4",
-      source: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=false`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}?autoPlay=false`,
+        subtitleLanguage,
+      ),
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidSrc 5",
-      source: `https://vidsrc.cc/v3/embed/tv/${id}/${season}/${episode}?autoPlay=false`,
+      source: addSubtitleLanguage(
+        `https://vidsrc.cc/v3/embed/tv/${id}/${season}/${episode}?autoPlay=false`,
+        subtitleLanguage,
+      ),
       recommended: true,
       fast: true,
       ads: true,
+      supportsSubtitles: true,
     },
     {
       title: "MoviesAPI",

@@ -2,12 +2,15 @@ import { PlayersProps } from "@/types";
 import VaulDrawer from "@/components/ui/overlay/VaulDrawer";
 import { HandlerType } from "@/types/component";
 import SelectButton from "@/components/ui/input/SelectButton";
-import { Ads, Clock, Rocket, Star } from "@/utils/icons";
+import { Ads, Captions, Clock, Rocket, Star } from "@/utils/icons";
+import { SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 
 interface TvShowPlayerSourceSelectionProps extends HandlerType {
   players: PlayersProps[];
   selectedSource: number;
   setSelectedSource: (source: number) => void;
+  selectedSubtitle: SubtitleLanguage;
+  setSelectedSubtitle: (subtitle: SubtitleLanguage) => void;
 }
 
 const TvShowPlayerSourceSelection: React.FC<TvShowPlayerSourceSelectionProps> = ({
@@ -16,6 +19,8 @@ const TvShowPlayerSourceSelection: React.FC<TvShowPlayerSourceSelectionProps> = 
   players,
   selectedSource,
   setSelectedSource,
+  selectedSubtitle,
+  setSelectedSubtitle,
 }) => {
   return (
     <VaulDrawer
@@ -47,6 +52,22 @@ const TvShowPlayerSourceSelection: React.FC<TvShowPlayerSourceSelectionProps> = 
           </div>
         </div>
         <SelectButton
+          label="Subtitle"
+          description="Pilih bahasa subtitle yang tersedia. Server akan menyesuaikan otomatis."
+          color="warning"
+          groupType="list"
+          value={selectedSubtitle}
+          onChange={(value) => {
+            setSelectedSubtitle(value || "off");
+            onClose();
+          }}
+          data={SUBTITLE_OPTIONS.map(({ label, value }) => ({
+            label,
+            value,
+            startContent: value !== "off" ? <Captions /> : undefined,
+          }))}
+        />
+        <SelectButton
           color="warning"
           groupType="list"
           value={selectedSource.toString()}
@@ -54,20 +75,23 @@ const TvShowPlayerSourceSelection: React.FC<TvShowPlayerSourceSelectionProps> = 
             setSelectedSource(Number(value || 0));
             onClose();
           }}
-          data={players.map(({ title, recommended, fast, ads, resumable }, index) => {
-            return {
-              label: title,
-              value: index.toString(),
-              endContent: (
-                <div key={`info-${title}`} className="flex flex-wrap items-center gap-2">
-                  {recommended && <Star className="text-warning" />}
-                  {fast && <Rocket className="text-danger" />}
-                  {resumable && <Clock className="text-success" />}
-                  {ads && <Ads className="text-primary" />}
-                </div>
-              ),
-            };
-          })}
+          data={players.map(
+            ({ title, recommended, fast, ads, resumable, supportsSubtitles }, index) => {
+              return {
+                label: title,
+                value: index.toString(),
+                disabled: selectedSubtitle !== "off" && !supportsSubtitles,
+                endContent: (
+                  <div key={`info-${title}`} className="flex flex-wrap items-center gap-2">
+                    {recommended && <Star className="text-warning" />}
+                    {fast && <Rocket className="text-danger" />}
+                    {resumable && <Clock className="text-success" />}
+                    {ads && <Ads className="text-primary" />}
+                  </div>
+                ),
+              };
+            },
+          )}
         />
       </div>
     </VaulDrawer>

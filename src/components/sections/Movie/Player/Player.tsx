@@ -3,11 +3,11 @@ import { siteConfig } from "@/config/site";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { cn } from "@/utils/helpers";
 import { mutateMovieTitle } from "@/utils/movies";
-import { getMoviePlayers } from "@/utils/players";
+import { getMoviePlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle, useLocalStorage } from "@mantine/hooks";
 import dynamic from "next/dynamic";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useMemo } from "react";
 import { MovieDetails } from "tmdb-ts/dist/types/movies";
 import { usePlayerEvents } from "@/hooks/usePlayerEvents";
@@ -26,7 +26,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
     getInitialValueInEffect: false,
   });
 
-  const players = getMoviePlayers(movie.id, startAt);
   const title = mutateMovieTitle(movie);
   const idle = useIdle(3000);
   const { mobile } = useBreakpoints();
@@ -35,11 +34,26 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
     "src",
     parseAsInteger.withDefault(0),
   );
+  const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
+    "sub",
+    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault("off"),
+  );
+
+  const players = getMoviePlayers(movie.id, startAt, selectedSubtitle);
 
   usePlayerEvents({ saveHistory: true });
   useDocumentTitle(`Play ${title} | ${siteConfig.name}`);
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
+
+  const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
+    if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
+      const subtitleSource = players.findIndex((player) => player.supportsSubtitles);
+      if (subtitleSource >= 0) setSelectedSource(subtitleSource);
+    }
+
+    setSelectedSubtitle(subtitle);
+  };
 
   return (
     <>
@@ -71,6 +85,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
         players={players}
         selectedSource={selectedSource}
         setSelectedSource={setSelectedSource}
+        selectedSubtitle={selectedSubtitle}
+        setSelectedSubtitle={handleSubtitleChange}
       />
     </>
   );

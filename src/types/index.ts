@@ -63,11 +63,12 @@ export type SiteConfigType = {
 
 export type PlayersProps = {
   title: string;
-  source: `https://${string}`;
+  source: string;
   recommended?: boolean;
   fast?: boolean;
   ads?: boolean;
   resumable?: boolean;
+  supportsSubtitles?: boolean;
 };
 
 export type Settings = {

@@ -1,10 +1,10 @@
 import { siteConfig } from "@/config/site";
 import { cn } from "@/utils/helpers";
-import { getTvShowPlayers } from "@/utils/players";
+import { getTvShowPlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle, useLocalStorage } from "@mantine/hooks";
 import dynamic from "next/dynamic";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { memo, useMemo } from "react";
 import { Episode, TvShowDetails } from "tmdb-ts";
 import useBreakpoints from "@/hooks/useBreakpoints";
@@ -41,13 +41,24 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   });
 
   const { mobile } = useBreakpoints();
-  const players = getTvShowPlayers(id, episode.season_number, episode.episode_number, startAt);
   const idle = useIdle(3000);
   const [sourceOpened, sourceHandlers] = useDisclosure(false);
   const [episodeOpened, episodeHandlers] = useDisclosure(false);
   const [selectedSource, setSelectedSource] = useQueryState<number>(
     "src",
     parseAsInteger.withDefault(0),
+  );
+  const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
+    "sub",
+    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault("off"),
+  );
+
+  const players = getTvShowPlayers(
+    id,
+    episode.season_number,
+    episode.episode_number,
+    startAt,
+    selectedSubtitle,
   );
 
   usePlayerEvents({
@@ -59,6 +70,15 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   );
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
+
+  const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
+    if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
+      const subtitleSource = players.findIndex((player) => player.supportsSubtitles);
+      if (subtitleSource >= 0) setSelectedSource(subtitleSource);
+    }
+
+    setSelectedSubtitle(subtitle);
+  };
 
   return (
     <>
@@ -72,6 +92,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
           selectedSource={selectedSource}
           onOpenSource={sourceHandlers.open}
           onOpenEpisode={episodeHandlers.open}
+          selectedSubtitle={selectedSubtitle}
           {...props}
         />
 
@@ -94,6 +115,8 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
         players={players}
         selectedSource={selectedSource}
         setSelectedSource={setSelectedSource}
+        selectedSubtitle={selectedSubtitle}
+        setSelectedSubtitle={handleSubtitleChange}
       />
       <TvShowPlayerEpisodeSelection
         id={id}
