@@ -8,12 +8,12 @@ import { SpacingClasses } from "@/utils/constants";
 import { cn, isEmpty, shuffleArray } from "@/utils/helpers";
 import { ArrowLeft } from "@/utils/icons";
 import { getImageUrl } from "@/utils/movies";
-import { addToast, Card, CardBody, CardHeader, ScrollShadow, Spinner } from "@heroui/react";
+import { addToast, Card, CardBody, CardHeader, ScrollShadow } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { parseAsBoolean, parseAsStringLiteral, useQueryState } from "nuqs";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AuthForgotPasswordForm from "./ForgotPassword";
 import AuthLoginForm from "./Login";
 import AuthRegisterForm from "./Register";
@@ -28,6 +28,12 @@ export interface AuthFormProps {
 const AuthForms: React.FC = () => {
   const pathname = usePathname();
   const reset = pathname === "/auth/reset-password";
+  const [loadBackdrop, setLoadBackdrop] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setLoadBackdrop(true), 800);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const [error, setError] = useQueryState("error", parseAsBoolean.withDefault(false));
   const [form, setForm] = useQueryState(
@@ -35,14 +41,16 @@ const AuthForms: React.FC = () => {
     parseAsStringLiteral(ValidForms).withDefault("login"),
   );
 
-  const { data: movies, isPending: isPendingMovies } = useQuery({
+  const { data: movies } = useQuery({
     queryFn: () => tmdb.trending.trending("movie", "day"),
     queryKey: ["movie-auth-posters"],
+    enabled: loadBackdrop && !reset,
   });
 
-  const { data: tvShows, isPending: isPendingTv } = useQuery({
+  const { data: tvShows } = useQuery({
     queryFn: () => tmdb.trending.trending("tv", "day"),
     queryKey: ["tv-auth-posters"],
+    enabled: loadBackdrop && !reset,
   });
 
   const IMAGES = useMemo(() => {
@@ -65,10 +73,6 @@ const AuthForms: React.FC = () => {
       setError(false);
     }
   }, [error]);
-
-  if (isPendingMovies || isPendingTv) {
-    return <Spinner size="lg" className="absolute-center" variant="simple" />;
-  }
 
   return (
     <div

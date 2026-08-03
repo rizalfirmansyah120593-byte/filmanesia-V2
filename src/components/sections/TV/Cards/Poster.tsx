@@ -49,7 +49,7 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
       >
         <Link href={`/tv/${tv.id}`} ref={ref} {...longPress()}>
           {variant === "full" && (
-            <div className="group motion-preset-focus relative aspect-2/3 overflow-hidden rounded-lg border-[3px] border-transparent text-white transition-colors hover:border-warning">
+            <div className="group motion-preset-focus hover:border-warning relative aspect-2/3 overflow-hidden rounded-lg border-[3px] border-transparent text-white transition-colors">
               {hovered && (
                 <Icon
                   icon="line-md:play-filled"
@@ -63,7 +63,7 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
                   color="danger"
                   size="sm"
                   variant="flat"
-                  className="absolute left-2 top-2 z-20"
+                  className="absolute top-2 left-2 z-20"
                 >
                   18+
                 </Chip>
@@ -80,6 +80,7 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
                 alt={title}
                 src={posterImage}
                 radius="none"
+                loading="lazy"
                 className="z-0 aspect-2/3 h-[250px] object-cover object-center transition group-hover:scale-110 md:h-[300px]"
                 classNames={{
                   img: "group-hover:opacity-70",
@@ -93,7 +94,7 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
               isHoverable
               fullWidth
               shadow="md"
-              className="group h-full bg-secondary-background"
+              className="group bg-secondary-background h-full"
             >
               <CardHeader className="flex items-center justify-center pb-0">
                 <div className="relative size-full">
@@ -110,15 +111,16 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
                       color="danger"
                       size="sm"
                       variant="shadow"
-                      className="absolute left-2 top-2 z-20"
+                      className="absolute top-2 left-2 z-20"
                     >
                       18+
                     </Chip>
                   )}
-                  <div className="relative overflow-hidden rounded-large">
+                  <div className="rounded-large relative overflow-hidden">
                     <Image
                       isBlurred
                       alt={title}
+                      loading="lazy"
                       className="aspect-2/3 rounded-lg object-cover object-center group-hover:scale-110"
                       src={posterImage}
                     />

@@ -96,7 +96,7 @@ export const timeAgo = (date: Date | string): string => {
  *
  * @example
  * getImageUrl('somepath.jpg', 'backdrop', true)
- * // returns 'http://image.tmdb.org/t/p/original/somepath.jpg'
+ * // returns 'https://image.tmdb.org/t/p/original/somepath.jpg'
  *
  * @example
  * getImageUrl(undefined, 'poster')
@@ -114,8 +114,12 @@ export const getImageUrl = (
       : type === "backdrop"
         ? "https://wallpapercave.com/wp/wp1945939.jpg"
         : "";
-  return path ? `http://image.tmdb.org/t/p/${size}/${path}` : fallback;
+  return path ? `https://image.tmdb.org/t/p/${size}/${path}` : fallback;
 };
+
+/** Uses a bounded backdrop size for the visible hero instead of downloading the original asset. */
+export const getBackdropImageUrl = (path?: string): string =>
+  path ? `https://image.tmdb.org/t/p/w1280/${path}` : "https://wallpapercave.com/wp/wp1945939.jpg";
 
 /**
  * Returns the title of a movie in the given language. If the movie is in the given language, the original title is used.

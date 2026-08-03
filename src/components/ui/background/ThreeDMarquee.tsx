@@ -22,7 +22,7 @@ const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className, aspect
       <div className="flex size-full items-center justify-center">
         <div className="size-[1400px] shrink-0 -translate-x-32 scale-75 md:scale-100">
           <div
-            className="relative right-[50%] top-96 grid size-full origin-top-left grid-cols-4 gap-8"
+            className="relative top-96 right-[50%] grid size-full origin-top-left grid-cols-4 gap-8"
             style={{
               transform: "rotateX(55deg) rotateY(0deg) rotateZ(-45deg)",
               transformStyle: "preserve-3d",
@@ -49,6 +49,8 @@ const ThreeDMarquee: React.FC<ThreeDMarqueeProps> = ({ images, className, aspect
                       alt={`Image ${imageIndex + 1}`}
                       width={aspect === "video" ? 970 : 600}
                       height={aspect === "video" ? 700 : 400}
+                      loading="lazy"
+                      decoding="async"
                       whileHover={{
                         y: -40,
                       }}
