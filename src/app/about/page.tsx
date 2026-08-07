@@ -24,6 +24,35 @@ const AboutPage: NextPage = () => {
           <FaGithub size={30} />
         </Link>
 
+        <div className="flex flex-col items-center gap-3 px-4 text-center">
+          <blockquote className="text-base italic text-foreground-600">
+            “Bagaimana bisa aku takut miskin, sedangkan aku berasal dari hamba Sang Maha Kaya”
+          </blockquote>
+          <p className="text-sm text-foreground-500">
+            Made in{" "}
+            <Link
+              href="https://saweria.co/RizalFirmansyah"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary hover:underline"
+            >
+              Rizal Firmansyah
+            </Link>
+          </p>
+          <p className="max-w-md text-sm text-foreground-500">
+            Suka dengan website ini? Dukung pengembangannya melalui donasi agar Filmanesia bisa terus
+            berkembang dan memberikan pengalaman menonton yang lebih baik.
+          </p>
+          <Link
+            href="https://saweria.co/RizalFirmansyah"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-80"
+          >
+            Dukung Filmanesia
+          </Link>
+        </div>
+
         {/* Footer Navigation */}
         <footer className="mt-10 border-t border-gray-200 pt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-500">
           <Link href="/privacy" className="hover:text-blue-600 transition-colors">
