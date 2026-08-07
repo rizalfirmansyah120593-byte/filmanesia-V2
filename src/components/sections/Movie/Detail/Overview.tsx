@@ -1,7 +1,7 @@
 "use client";
 
 import { Image, Chip, Button } from "@heroui/react";
-import { getImageUrl, movieDurationString, mutateMovieTitle } from "@/utils/movies";
+import { getPosterThumbnailUrl, movieDurationString, mutateMovieTitle } from "@/utils/movies";
 import BookmarkButton from "@/components/ui/button/BookmarkButton";
 import { MovieDetails } from "tmdb-ts/dist/types/movies";
 import Rating from "../../../ui/other/Rating";
@@ -16,6 +16,8 @@ import Trailer from "@/components/ui/overlay/Trailer";
 import { Calendar, Clock } from "@/utils/icons";
 import Link from "next/link";
 import { SavedMovieDetails } from "@/types/movie";
+import LocalizedOverview from "@/components/ui/other/LocalizedOverview";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 interface OverviewSectionProps {
   movie: AppendToResponse<MovieDetails, "videos"[], "movie">;
@@ -23,9 +25,10 @@ interface OverviewSectionProps {
 
 const OverviewSection: React.FC<OverviewSectionProps> = ({ movie }) => {
   const releaseYear = new Date(movie.release_date).getFullYear();
-  const posterImage = getImageUrl(movie.poster_path);
+  const posterImage = getPosterThumbnailUrl(movie.poster_path);
   const title = mutateMovieTitle(movie);
   const fullTitle = title;
+  const { t } = useLanguage();
   const bookmarkData: SavedMovieDetails = {
     type: "movie",
     adult: movie.adult,
@@ -44,7 +47,6 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ movie }) => {
     <section id="overview" className="relative z-3 flex flex-col gap-8 pt-[20vh] md:pt-[40vh]">
       <div className="md:grid md:grid-cols-[auto_1fr] md:gap-6">
         <Image
-          isBlurred
           shadow="md"
           alt={fullTitle}
           classNames={{
@@ -108,8 +110,8 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ movie }) => {
           </div>
 
           <div id="story" className="flex flex-col gap-2">
-            <SectionTitle>Story Line</SectionTitle>
-            <p className="text-sm">{movie.overview}</p>
+            <SectionTitle>{t("synopsis")}</SectionTitle>
+            <p className="text-sm"><LocalizedOverview id={movie.id} type="movie" fallback={movie.overview} /></p>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import Rating from "@/components/ui/other/Rating";
 import VaulDrawer from "@/components/ui/overlay/VaulDrawer";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import useDeviceVibration from "@/hooks/useDeviceVibration";
-import { getImageUrl, mutateMovieTitle } from "@/utils/movies";
+import { getPosterThumbnailUrl, mutateMovieTitle } from "@/utils/movies";
 import { Card, CardBody, CardFooter, CardHeader, Chip, Image, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useDisclosure, useHover } from "@mantine/hooks";
@@ -28,7 +28,7 @@ const MoviePosterCard: React.FC<MoviePosterCardProps> = ({
   const { hovered, ref } = useHover();
   const [opened, handlers] = useDisclosure(false);
   const releaseYear = new Date(movie.release_date).getFullYear();
-  const posterImage = getImageUrl(movie.poster_path);
+  const posterImage = getPosterThumbnailUrl(movie.poster_path);
   const title = mutateMovieTitle(movie);
   const { mobile } = useBreakpoints();
   const { startVibration } = useDeviceVibration();
@@ -90,6 +90,7 @@ const MoviePosterCard: React.FC<MoviePosterCardProps> = ({
                 // OPTIMASI: Tambahan untuk mempercepat LCP
                 fetchPriority={isPriority ? "high" : "auto"}
                 loading={isPriority ? "eager" : "lazy"}
+                decoding="async"
                 // ----------------------------------------
                 className="z-0 aspect-2/3 h-[250px] object-cover object-center transition group-hover:scale-110 md:h-[300px]"
                 classNames={{
@@ -128,13 +129,13 @@ const MoviePosterCard: React.FC<MoviePosterCardProps> = ({
                   )}
                   <div className="rounded-large relative overflow-hidden">
                     <Image
-                      isBlurred
                       alt={title}
                       className="aspect-2/3 rounded-lg object-cover object-center group-hover:scale-110"
                       src={posterImage}
                       // OPTIMASI: Tambahan untuk mempercepat LCP
                       fetchPriority={isPriority ? "high" : "auto"}
                       loading={isPriority ? "eager" : "lazy"}
+                      decoding="async"
                       // ----------------------------------------
                     />
                   </div>

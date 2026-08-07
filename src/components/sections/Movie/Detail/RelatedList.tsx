@@ -6,10 +6,10 @@ const RelatedMovieList: React.FC<{ movies: Movie[] }> = ({ movies }) => {
   return (
     <div className="z-3 flex flex-col gap-2">
       <Carousel>
-        {movies.map((movie) => {
+        {movies.map((movie, index) => {
           return (
             <div key={movie.id} className="flex min-h-fit max-w-fit items-center px-1 py-2">
-              <MoviePosterCard movie={movie} />
+              <MoviePosterCard movie={movie} isPriority={index < 10} />
             </div>
           );
         })}

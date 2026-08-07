@@ -41,7 +41,7 @@ export default async function TVShowDetailPage({ params }: Props) {
   return <div className="mx-auto max-w-5xl">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <div className="flex flex-col gap-10">
-      <TvShowBackdropSection tv={tv} /><TvShowOverviewSection tv={tv} onViewEpisodesClick={() => undefined} />
+      <TvShowBackdropSection tv={tv} /><TvShowOverviewSection tv={tv} />
       <TvShowCastsSection casts={tv.credits.cast as Cast[]} /><PhotosSection images={tv.images.backdrops as Image[]} type="tv" />
       <TvShowsSeasonsSelection id={id} seasons={tv.seasons} /><TvShowRelatedSection tv={tv} />
     </div>

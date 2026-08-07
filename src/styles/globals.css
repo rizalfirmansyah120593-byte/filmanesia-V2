@@ -103,3 +103,21 @@ body {
 @utility movie-grid {
   @apply grid size-full max-w-6xl grid-cols-2 justify-center gap-2 sm:grid-cols-3 md:gap-4 lg:grid-cols-[repeat(auto-fit,minmax(200px,50px))];
 }
+
+.trending-marquee {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+}
+
+.trending-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.75rem;
+  animation: trending-marquee 42s linear infinite;
+}
+
+@keyframes trending-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 0.375rem)); }
+}

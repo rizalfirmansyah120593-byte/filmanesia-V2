@@ -35,19 +35,21 @@ export const getMoviePlayers = (
   return [
     {
       title: "VidLink",
-      source: `https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`,
+      source: addSubtitleLanguage(`https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidLink 2",
-      source: `https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=false&startAt=${startAt}`,
+      source: addSubtitleLanguage(`https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=false&startAt=${startAt}`, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidKing",
@@ -163,19 +165,21 @@ export const getTvShowPlayers = (
   return [
     {
       title: "VidLink",
-      source: `https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`,
+      source: addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidLink 2",
-      source: `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=false&startAt=${startAt}`,
+      source: addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=false&startAt=${startAt}`, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "VidKing",

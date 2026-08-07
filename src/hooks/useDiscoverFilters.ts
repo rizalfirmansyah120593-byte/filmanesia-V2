@@ -12,6 +12,9 @@ const useDiscoverFilters = () => {
   const { movies, tvShows } = siteConfig.queryLists;
 
   const [genres, setGenres] = useQueryState("genres", parseAsSet.withDefault(new Set([])));
+  const [years, setYears] = useQueryState("years", parseAsSet.withDefault(new Set([])));
+  const [countries, setCountries] = useQueryState("countries", parseAsSet.withDefault(new Set([])));
+  const [ratings, setRatings] = useQueryState("ratings", parseAsSet.withDefault(new Set([])));
   const [queryType, setQueryType] = useQueryState(
     "type",
     parseAsStringLiteral([
@@ -43,10 +46,17 @@ const useDiscoverFilters = () => {
     [genres],
   );
 
+  const yearsString = useMemo(() => Array.from(years).filter(Boolean).join(","), [years]);
+  const countriesString = useMemo(() => Array.from(countries).filter(Boolean).join(","), [countries]);
+  const ratingsString = useMemo(() => Array.from(ratings).filter(Boolean).join(","), [ratings]);
+
   const resetFilters = useCallback(() => {
     setGenres(null);
+    setYears(null);
+    setCountries(null);
+    setRatings(null);
     setQueryType(DEFAULT_QUERY_TYPE);
-  }, [setGenres, setQueryType]);
+  }, [setCountries, setGenres, setQueryType, setRatings, setYears]);
 
   const clearQueries = useCallback(() => {
     const queryKeys = ["discover-movies", "discover-tv-shows"];
@@ -59,7 +69,7 @@ const useDiscoverFilters = () => {
 
   useEffect(() => {
     clearQueries();
-  }, [content, queryType, genresString]);
+  }, [content, queryType, genresString, yearsString, countriesString, ratingsString]);
 
   return {
     types,
@@ -67,7 +77,16 @@ const useDiscoverFilters = () => {
     queryType,
     content,
     genresString,
+    years,
+    yearsString,
+    countries,
+    countriesString,
+    ratings,
+    ratingsString,
     setGenres,
+    setYears,
+    setCountries,
+    setRatings,
     setQueryType,
     setContent,
     resetFilters,

@@ -1,5 +1,6 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 import { NextConfig } from "next/dist/server/config";
+import path from "node:path";
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -24,6 +25,16 @@ const nextConfig: NextConfig = {
   // https://github.com/payloadcms/payload/issues/12550#issuecomment-2939070941
   turbopack: {
     resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
+    resolveAlias: {
+      "cross-fetch": "./src/api/native-fetch.ts",
+    },
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "cross-fetch": path.resolve(process.cwd(), "src/api/native-fetch.ts"),
+    };
+    return config;
   },
   experimental: {
     optimizePackageImports: ["@heroui/react"],

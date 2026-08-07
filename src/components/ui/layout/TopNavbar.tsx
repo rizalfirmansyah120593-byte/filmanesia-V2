@@ -8,13 +8,15 @@ import { useWindowScroll } from "@mantine/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import FullscreenToggleButton from "../button/FullscreenToggleButton";
-import UserProfileButton from "../button/UserProfileButton";
 import SearchInput from "../input/SearchInput";
 import ThemeSwitchDropdown from "../input/ThemeSwitchDropdown";
+import LanguageSwitchDropdown from "../input/LanguageSwitchDropdown";
 import BrandLogo from "../other/BrandLogo";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 const TopNavbar = () => {
   const pathName = usePathname();
+  const { t } = useLanguage();
   const [{ y }] = useWindowScroll();
   const opacity = Math.min((y / 1000) * 5, 1);
   const hrefs = siteConfig.navItems.map((item) => item.href);
@@ -51,7 +53,7 @@ const TopNavbar = () => {
             <Link href="/search" className="w-full">
               <SearchInput
                 className="pointer-events-none"
-                placeholder="Search your favorite movies..."
+                placeholder={t("searchPlaceholder")}
               />
             </Link>
           </NavbarItem>
@@ -60,8 +62,8 @@ const TopNavbar = () => {
       <NavbarContent justify="end">
         <NavbarItem className="flex gap-1">
           <ThemeSwitchDropdown />
+          <LanguageSwitchDropdown />
           <FullscreenToggleButton />
-          <UserProfileButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

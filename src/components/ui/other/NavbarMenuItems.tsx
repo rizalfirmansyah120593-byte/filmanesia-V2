@@ -1,6 +1,7 @@
 import { siteConfig } from "@/config/site";
 import { Link, Tab, Tabs, TabsProps } from "@heroui/react";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 interface NavbarMenuItemsProps extends TabsProps {
   withIcon?: boolean;
@@ -20,6 +21,7 @@ const NavbarMenuItems: React.FC<NavbarMenuItemsProps> = ({
   size = "lg",
 }) => {
   const pathName = usePathname();
+  const { t } = useLanguage();
 
   return (
     <Tabs
@@ -34,13 +36,14 @@ const NavbarMenuItems: React.FC<NavbarMenuItemsProps> = ({
     >
       {menuArray.map((item) => {
         const isActive = pathName === item.href;
-        let title: React.ReactNode = item.label;
+        const labelKey = item.label.toLowerCase();
+        let title: React.ReactNode = t(labelKey);
 
         if (withIcon) {
           title = (
             <div className="flex max-h-[45px] flex-col items-center gap-1">
               {isActive ? item.activeIcon : item.icon}
-              <p>{item.label}</p>
+              <p>{t(labelKey)}</p>
             </div>
           );
         }

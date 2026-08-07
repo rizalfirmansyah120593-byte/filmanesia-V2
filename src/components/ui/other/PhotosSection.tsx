@@ -2,7 +2,7 @@
 
 import { Image as ImageProps } from "tmdb-ts";
 import { Image } from "@heroui/react";
-import { getImageUrl } from "@/utils/movies";
+import { getBackdropThumbnailUrl, getImageUrl } from "@/utils/movies";
 import Gallery from "@/components/ui/overlay/Gallery";
 import { Slide } from "yet-another-react-lightbox";
 import { useState } from "react";
@@ -29,11 +29,10 @@ const PhotosSection: React.FC<PhotosSectionProps> = ({ images, type = "movie" })
           <div key={file_path} className="group relative">
             <Image
               onClick={() => setIndex(index)}
-              isBlurred
               isZoomed
               width={300}
               alt={`Image ${index + 1}`}
-              src={getImageUrl(file_path, "backdrop")}
+              src={getBackdropThumbnailUrl(file_path)}
               className="aspect-video cursor-pointer"
             />
 

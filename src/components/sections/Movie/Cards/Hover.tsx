@@ -5,7 +5,7 @@ import Rating from "@/components/ui/other/Rating";
 import { SavedMovieDetails } from "@/types/movie";
 import { cn, isEmpty } from "@/utils/helpers";
 import { Calendar, Clock } from "@/utils/icons";
-import { getImageUrl, movieDurationString, mutateMovieTitle } from "@/utils/movies";
+import { getBackdropThumbnailUrl, getImageUrl, movieDurationString, mutateMovieTitle } from "@/utils/movies";
 import { Button, Chip, Image, Link, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
@@ -30,7 +30,7 @@ const HoverPosterCard: React.FC<{ id: number; fullWidth?: boolean }> = ({ id, fu
   const title = mutateMovieTitle(movie);
   const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : undefined;
   const fullTitle = title;
-  const backdropImage = getImageUrl(movie.backdrop_path, "backdrop");
+  const backdropImage = getBackdropThumbnailUrl(movie.backdrop_path);
   const titleImage = getImageUrl(
     movie.images.logos.find((logo) => logo.iso_639_1 === "en")?.file_path,
     "title",

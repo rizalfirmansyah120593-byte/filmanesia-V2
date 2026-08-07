@@ -1,11 +1,11 @@
-import { ADS_WARNING_STORAGE_KEY, SpacingClasses } from "@/utils/constants";
+import { SpacingClasses } from "@/utils/constants";
 import { siteConfig } from "@/config/site";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { cn } from "@/utils/helpers";
 import { mutateMovieTitle } from "@/utils/movies";
 import { getMoviePlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
-import { useDisclosure, useDocumentTitle, useIdle, useLocalStorage } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useMemo } from "react";
@@ -21,11 +21,6 @@ interface MoviePlayerProps {
 }
 
 const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
-  const [seen] = useLocalStorage<boolean>({
-    key: ADS_WARNING_STORAGE_KEY,
-    getInitialValueInEffect: false,
-  });
-
   const title = mutateMovieTitle(movie);
   const idle = useIdle(3000);
   const { mobile } = useBreakpoints();
@@ -36,19 +31,36 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   );
   const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
     "sub",
-    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault("off"),
+    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault("id"),
   );
 
   const players = getMoviePlayers(movie.id, startAt, selectedSubtitle);
 
-  usePlayerEvents({ saveHistory: true });
+  usePlayerEvents({ saveHistory: false });
   useDocumentTitle(`Play ${title} | ${siteConfig.name}`);
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
+  const moveToNextSource = () => {
+    if (selectedSubtitle !== "off" && selectedSource >= 10) {
+      setSelectedSubtitle("off");
+      setSelectedSource(2);
+      return;
+    }
+    const nextIndex = players.findIndex(
+      (player, index) => index > selectedSource && (selectedSubtitle === "off" || player.supportsSubtitles),
+    );
+    const firstValidIndex = players.findIndex(
+      (player) => selectedSubtitle === "off" || player.supportsSubtitles,
+    );
+    setSelectedSource(nextIndex >= 0 ? nextIndex : firstValidIndex >= 0 ? firstValidIndex : 2);
+  };
+
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
     if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
-      const subtitleSource = players.findIndex((player) => player.supportsSubtitles);
+      const subtitleSource = players.findIndex((player) => player.title === "VidSrc 5") >= 0
+        ? players.findIndex((player) => player.title === "VidSrc 5")
+        : players.findIndex((player) => player.supportsSubtitles);
       if (subtitleSource >= 0) setSelectedSource(subtitleSource);
     }
 
@@ -68,14 +80,15 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
         />
         <Card shadow="md" radius="none" className="relative h-screen">
           <Skeleton className="absolute h-full w-full" />
-          {seen && (
-            <iframe
-              allowFullScreen
-              key={PLAYER.title}
-              src={PLAYER.source}
-              className={cn("z-10 h-full", { "pointer-events-none": idle && !mobile })}
-            />
-          )}
+          <iframe
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+            loading="eager"
+            key={PLAYER.title}
+            src={PLAYER.source}
+            onError={moveToNextSource}
+            className={cn("z-10 h-full", { "pointer-events-none": idle && !mobile })}
+          />
         </Card>
       </div>
 

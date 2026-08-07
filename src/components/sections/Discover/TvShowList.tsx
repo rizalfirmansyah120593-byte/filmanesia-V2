@@ -16,15 +16,18 @@ import TvShowPosterCard from "../TV/Cards/Poster";
 
 const TvShowDiscoverList = () => {
   const { ref, inViewport } = useInViewport();
-  const { genresString, queryType } = useDiscoverFilters();
+  const { genresString, yearsString, countriesString, ratingsString, queryType } = useDiscoverFilters();
   const { data, isPending, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["discover-tv-shows", queryType, genresString],
+      queryKey: ["discover-tv-shows", queryType, genresString, yearsString, countriesString, ratingsString],
       queryFn: ({ pageParam }) =>
         useFetchDiscoverTvShows({
           page: pageParam,
           type: queryType as DiscoverTvShowsFetchQueryType,
           genres: genresString,
+          years: yearsString,
+          countries: countriesString,
+          ratings: ratingsString,
         }),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
@@ -55,8 +58,8 @@ const TvShowDiscoverList = () => {
     <div className="flex flex-col items-center justify-center gap-10">
       <div className="movie-grid">
         {data.pages.map((page) => {
-          return page.results.map((tv) => {
-            return <TvShowPosterCard key={tv.id} tv={tv} variant="bordered" />;
+          return page.results.map((tv, index) => {
+            return <TvShowPosterCard key={tv.id} tv={tv} variant="bordered" isPriority={index < 20} />;
           });
         })}
       </div>

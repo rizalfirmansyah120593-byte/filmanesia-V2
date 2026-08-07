@@ -81,6 +81,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html suppressHydrationWarning lang="id">
       <body className={cn("bg-background min-h-dvh antialiased select-none", Poppins.className)}>
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

@@ -107,19 +107,35 @@ export const getImageUrl = (
   type: "poster" | "backdrop" | "title" | "avatar" = "poster",
   fullSize?: boolean,
 ): string => {
-  const size = fullSize ? "original" : "w500";
+  const size = fullSize
+    ? "original"
+    : type === "poster"
+      ? "w342"
+      : type === "title"
+        ? "w342"
+        : type === "backdrop"
+          ? "w780"
+          : "w500";
   const fallback =
     type === "poster"
-      ? "https://dancyflix.com/placeholder.png"
+      ? "/logo.png"
       : type === "backdrop"
         ? "https://wallpapercave.com/wp/wp1945939.jpg"
         : "";
   return path ? `https://image.tmdb.org/t/p/${size}/${path}` : fallback;
 };
 
+/** Lightweight poster variant for cards; it reduces transfer size substantially. */
+export const getPosterThumbnailUrl = (path?: string): string =>
+  path ? `https://image.tmdb.org/t/p/w154/${path}` : "/logo.png";
+
+/** Lightweight backdrop variant for cards and gallery thumbnails. */
+export const getBackdropThumbnailUrl = (path?: string): string =>
+  path ? `https://image.tmdb.org/t/p/w342/${path}` : "/logo.png";
+
 /** Uses a bounded backdrop size for the visible hero instead of downloading the original asset. */
 export const getBackdropImageUrl = (path?: string): string =>
-  path ? `https://image.tmdb.org/t/p/w1280/${path}` : "https://wallpapercave.com/wp/wp1945939.jpg";
+  path ? `https://image.tmdb.org/t/p/w780/${path}` : "/logo.png";
 
 /**
  * Returns the title of a movie in the given language. If the movie is in the given language, the original title is used.

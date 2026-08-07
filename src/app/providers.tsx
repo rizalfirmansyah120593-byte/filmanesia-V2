@@ -9,6 +9,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { usePathname, useRouter } from "next/navigation";
 import useDiscoverFilters from "@/hooks/useDiscoverFilters";
 import dynamic from "next/dynamic";
+import { LanguageProvider } from "@/i18n/LanguageProvider";
 
 const DevelopmentQueryDevtools = dynamic(
   () =>
@@ -28,6 +29,7 @@ export default function Providers({ children }: PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
       <HeroUIProvider navigate={push}>
         <ToastProvider
           placement="top-right"
@@ -55,6 +57,7 @@ export default function Providers({ children }: PropsWithChildren) {
           </Suspense>
         </NextThemesProvider>
       </HeroUIProvider>
+      </LanguageProvider>
       {process.env.NODE_ENV !== "production" && (
         <div className="hidden md:block">
           <DevelopmentQueryDevtools initialIsOpen={false} />

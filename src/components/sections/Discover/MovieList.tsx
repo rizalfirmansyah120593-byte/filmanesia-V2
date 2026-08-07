@@ -16,16 +16,19 @@ import { getLoadingLabel } from "@/utils/movies";
 
 const MovieDiscoverList = () => {
   const { ref, inViewport } = useInViewport();
-  const { genresString, queryType } = useDiscoverFilters();
+  const { genresString, yearsString, countriesString, ratingsString, queryType } = useDiscoverFilters();
 
   const { data, isPending, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["discover-movies", queryType, genresString],
+      queryKey: ["discover-movies", queryType, genresString, yearsString, countriesString, ratingsString],
       queryFn: ({ pageParam }) =>
         useFetchDiscoverMovies({
           page: pageParam,
           type: queryType as DiscoverMoviesFetchQueryType,
           genres: genresString,
+          years: yearsString,
+          countries: countriesString,
+          ratings: ratingsString,
         }),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
@@ -56,8 +59,8 @@ const MovieDiscoverList = () => {
     <div className="flex flex-col items-center justify-center gap-10">
       <div className="movie-grid">
         {data.pages.map((page) => {
-          return page.results.map((movie) => {
-            return <MoviePosterCard key={movie.id} movie={movie} variant="bordered" />;
+          return page.results.map((movie, index) => {
+            return <MoviePosterCard key={movie.id} movie={movie} variant="bordered" isPriority={index < 20} />;
           });
         })}
       </div>

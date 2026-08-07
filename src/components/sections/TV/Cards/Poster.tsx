@@ -2,7 +2,7 @@ import Rating from "@/components/ui/other/Rating";
 import VaulDrawer from "@/components/ui/overlay/VaulDrawer";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import useDeviceVibration from "@/hooks/useDeviceVibration";
-import { getImageUrl, mutateTvShowTitle } from "@/utils/movies";
+import { getPosterThumbnailUrl, mutateTvShowTitle } from "@/utils/movies";
 import { Card, CardBody, CardFooter, CardHeader, Chip, Image, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useDisclosure, useHover } from "@mantine/hooks";
@@ -15,13 +15,14 @@ import TvShowHoverCard from "./Hover";
 interface TvShowPosterCardProps {
   tv: TV;
   variant?: "full" | "bordered";
+  isPriority?: boolean;
 }
 
-const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full" }) => {
+const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full", isPriority = false }) => {
   const { hovered, ref } = useHover();
   const [opened, handlers] = useDisclosure(false);
   const releaseYear = new Date(tv.first_air_date).getFullYear();
-  const posterImage = getImageUrl(tv.poster_path);
+  const posterImage = getPosterThumbnailUrl(tv.poster_path);
   const title = mutateTvShowTitle(tv);
   const { mobile } = useBreakpoints();
   const { startVibration } = useDeviceVibration();
@@ -80,7 +81,9 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
                 alt={title}
                 src={posterImage}
                 radius="none"
-                loading="lazy"
+                fetchPriority={isPriority ? "high" : "auto"}
+                loading={isPriority ? "eager" : "lazy"}
+                decoding="async"
                 className="z-0 aspect-2/3 h-[250px] object-cover object-center transition group-hover:scale-110 md:h-[300px]"
                 classNames={{
                   img: "group-hover:opacity-70",
@@ -118,9 +121,10 @@ const TvShowPosterCard: React.FC<TvShowPosterCardProps> = ({ tv, variant = "full
                   )}
                   <div className="rounded-large relative overflow-hidden">
                     <Image
-                      isBlurred
                       alt={title}
-                      loading="lazy"
+                      fetchPriority={isPriority ? "high" : "auto"}
+                      loading={isPriority ? "eager" : "lazy"}
+                      decoding="async"
                       className="aspect-2/3 rounded-lg object-cover object-center group-hover:scale-110"
                       src={posterImage}
                     />

@@ -5,11 +5,13 @@ import clsx from "clsx";
 import { Link } from "@heroui/link";
 import { usePathname } from "next/navigation";
 import { Chip } from "@heroui/chip";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 const BottomNavbar = () => {
   const pathName = usePathname();
   const hrefs = siteConfig.navItems.map((item) => item.href);
   const show = hrefs.includes(pathName);
+  const { t } = useLanguage();
 
   return (
     show && (
@@ -36,7 +38,7 @@ const BottomNavbar = () => {
                     >
                       {isActive ? item.activeIcon : item.icon}
                     </Chip>
-                    <p className={clsx("text-[10px]", { "font-bold": isActive })}>{item.label}</p>
+                    <p className={clsx("text-[10px]", { "font-bold": isActive })}>{t(item.label.toLowerCase())}</p>
                   </div>
                 </Link>
               );

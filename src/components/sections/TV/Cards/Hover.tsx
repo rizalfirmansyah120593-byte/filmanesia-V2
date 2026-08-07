@@ -2,7 +2,7 @@ import { tmdb } from "@/api/tmdb";
 import Genres from "@/components/ui/other/Genres";
 import { cn, isEmpty } from "@/utils/helpers";
 import { Calendar, List, Play, Season } from "@/utils/icons";
-import { getImageUrl, mutateTvShowTitle } from "@/utils/movies";
+import { getBackdropThumbnailUrl, getImageUrl, mutateTvShowTitle } from "@/utils/movies";
 import { Button, Chip, Image, Link, Spinner } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import Rating from "../../../ui/other/Rating";
@@ -30,7 +30,7 @@ const TvShowHoverCard: React.FC<{ id: number; fullWidth?: boolean }> = ({ id, fu
   const lastReleaseYear = new Date(tv.last_air_date).getFullYear();
   const releaseYears = `${firstReleaseYear} ${firstReleaseYear !== lastReleaseYear ? ` - ${lastReleaseYear}` : ""}`;
   const fullTitle = title;
-  const backdropImage = getImageUrl(tv.backdrop_path, "backdrop");
+  const backdropImage = getBackdropThumbnailUrl(tv.backdrop_path);
   const titleImage = getImageUrl(
     tv.images.logos.find((logo) => logo.iso_639_1 === "en")?.file_path,
     "title",

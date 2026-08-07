@@ -1,7 +1,7 @@
 "use client";
 
 import { Image, Chip, Button } from "@heroui/react";
-import { getImageUrl, mutateTvShowTitle } from "@/utils/movies";
+import { getPosterThumbnailUrl, mutateTvShowTitle } from "@/utils/movies";
 import BookmarkButton from "@/components/ui/button/BookmarkButton";
 import ShareButton from "@/components/ui/button/ShareButton";
 import { AppendToResponse } from "tmdb-ts/dist/types/options";
@@ -15,22 +15,22 @@ import Rating from "@/components/ui/other/Rating";
 import SectionTitle from "@/components/ui/other/SectionTitle";
 import Trailer from "@/components/ui/overlay/Trailer";
 import { SavedMovieDetails } from "@/types/movie";
+import LocalizedOverview from "@/components/ui/other/LocalizedOverview";
+import { useLanguage } from "@/i18n/LanguageProvider";
+import Link from "next/link";
 
 export interface TvShowOverviewSectionProps {
   tv: AppendToResponse<TvShowDetails, "videos"[], "tvShow">;
-  onViewEpisodesClick: () => void;
 }
 
-export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({
-  tv,
-  onViewEpisodesClick,
-}) => {
+export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({ tv }) => {
   const firstReleaseYear = new Date(tv.first_air_date).getFullYear();
   const lastReleaseYear = new Date(tv.last_air_date).getFullYear();
   const releaseYears = `${firstReleaseYear} ${firstReleaseYear !== lastReleaseYear ? ` - ${lastReleaseYear}` : ""}`;
-  const posterImage = getImageUrl(tv.poster_path);
+  const posterImage = getPosterThumbnailUrl(tv.poster_path);
   const title = mutateTvShowTitle(tv);
   const fullTitle = title;
+  const { t } = useLanguage();
   const bookmarkData: SavedMovieDetails = {
     type: "tv",
     adult: "adult" in tv ? (tv.adult as boolean) : false,
@@ -49,7 +49,6 @@ export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({
     <section id="overview" className="relative z-3 flex flex-col gap-8 pt-[20vh] md:pt-[40vh]">
       <div className="md:grid md:grid-cols-[auto_1fr] md:gap-6">
         <Image
-          isBlurred
           shadow="md"
           alt={fullTitle}
           classNames={{
@@ -98,9 +97,10 @@ export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({
           <div id="action" className="flex w-full flex-wrap justify-between gap-4 md:gap-0">
             <div className="flex flex-wrap gap-2">
               <Button
+                as={Link}
+                href="#seasons-episodes"
                 color="warning"
                 variant="shadow"
-                onPress={onViewEpisodesClick}
                 startContent={<FaCirclePlay size={22} />}
               >
                 View Episodes
@@ -114,8 +114,8 @@ export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({
           </div>
 
           <div id="story" className="flex flex-col gap-2">
-            <SectionTitle color="warning">Story Line</SectionTitle>
-            <p className="text-sm">{tv.overview}</p>
+            <SectionTitle color="warning">{t("synopsis")}</SectionTitle>
+            <p className="text-sm"><LocalizedOverview id={tv.id} type="tv" fallback={tv.overview} /></p>
           </div>
         </div>
       </div>
