@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export type Language = "id" | "en" | "ms";
 
@@ -44,11 +45,18 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export const LanguageProvider = ({ children }: PropsWithChildren) => {
   const [language, setLanguageState] = useState<Language>("id");
+  const searchParams = useSearchParams();
 
   useEffect(() => {
+    const queryLanguage = searchParams.get("lang") as Language | null;
+    if (queryLanguage && queryLanguage in translations) {
+      setLanguageState(queryLanguage);
+      window.localStorage.setItem("filmanesia-language", queryLanguage);
+      return;
+    }
     const saved = window.localStorage.getItem("filmanesia-language") as Language | null;
     if (saved && saved in translations) setLanguageState(saved);
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     document.documentElement.lang = language;

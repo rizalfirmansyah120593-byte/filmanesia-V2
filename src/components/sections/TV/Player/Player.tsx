@@ -5,7 +5,7 @@ import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Episode, TvShowDetails } from "tmdb-ts";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { SpacingClasses } from "@/utils/constants";
@@ -36,6 +36,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   ...props
 }) => {
   const { mobile } = useBreakpoints();
+  const [iframeReady, setIframeReady] = useState(false);
   const idle = useIdle(3000);
   const [sourceOpened, sourceHandlers] = useDisclosure(false);
   const [episodeOpened, episodeHandlers] = useDisclosure(false);
@@ -95,12 +96,17 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   };
 
   useEffect(() => {
+    if (iframeReady || lastEvent === "play") return;
     const fallbackTimer = window.setTimeout(() => {
-      if (lastEvent !== "play") moveToNextSource();
+      if (!iframeReady) moveToNextSource();
     }, 8000);
 
     return () => window.clearTimeout(fallbackTimer);
-  }, [lastEvent, selectedSource, selectedSubtitle]);
+  }, [iframeReady, lastEvent, selectedSource, selectedSubtitle]);
+
+  useEffect(() => {
+    setIframeReady(false);
+  }, [PLAYER.source]);
 
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
     if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
@@ -137,6 +143,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
             loading="eager"
             key={PLAYER.title}
             src={PLAYER.source}
+            onLoad={() => setIframeReady(true)}
             onError={moveToNextSource}
             className={cn("z-10 h-full", { "pointer-events-none": idle && !mobile })}
           />
