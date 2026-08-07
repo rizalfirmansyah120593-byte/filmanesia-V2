@@ -8,7 +8,7 @@ import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { MovieDetails } from "tmdb-ts/dist/types/movies";
 import { usePlayerEvents } from "@/hooks/usePlayerEvents";
 const AdsWarning = dynamic(() => import("@/components/ui/overlay/AdsWarning"));
@@ -36,7 +36,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
 
   const players = getMoviePlayers(movie.id, startAt, selectedSubtitle);
 
-  usePlayerEvents({ saveHistory: false });
+  const { lastEvent } = usePlayerEvents({ saveHistory: false });
   useDocumentTitle(`Play ${title} | ${siteConfig.name}`);
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
@@ -55,6 +55,14 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
     );
     setSelectedSource(nextIndex >= 0 ? nextIndex : firstValidIndex >= 0 ? firstValidIndex : 2);
   };
+
+  useEffect(() => {
+    const fallbackTimer = window.setTimeout(() => {
+      if (lastEvent !== "play") moveToNextSource();
+    }, 12000);
+
+    return () => window.clearTimeout(fallbackTimer);
+  }, [lastEvent, selectedSource, selectedSubtitle]);
 
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
     if (subtitle !== "off" && !PLAYER.supportsSubtitles) {

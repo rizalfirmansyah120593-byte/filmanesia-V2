@@ -5,7 +5,7 @@ import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { Episode, TvShowDetails } from "tmdb-ts";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { SpacingClasses } from "@/utils/constants";
@@ -56,7 +56,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
     selectedSubtitle,
   );
 
-  usePlayerEvents({
+  const { lastEvent } = usePlayerEvents({
     saveHistory: false,
     metadata: { season: episode.season_number, episode: episode.episode_number },
   });
@@ -80,6 +80,14 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
     );
     setSelectedSource(nextIndex >= 0 ? nextIndex : firstValidIndex >= 0 ? firstValidIndex : 2);
   };
+
+  useEffect(() => {
+    const fallbackTimer = window.setTimeout(() => {
+      if (lastEvent !== "play") moveToNextSource();
+    }, 12000);
+
+    return () => window.clearTimeout(fallbackTimer);
+  }, [lastEvent, selectedSource, selectedSubtitle]);
 
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
     if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
