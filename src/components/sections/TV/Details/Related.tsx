@@ -10,15 +10,15 @@ interface TvShowRelatedSectionProps {
 
 const TvShowRelatedSection: React.FC<TvShowRelatedSectionProps> = ({ tv }) => {
   // @ts-expect-error: wrong type.
-  const recommendations = tv.recommendations.results as TV[];
-  const similar = tv.similar.results as TV[];
+  const recommendations = (tv.recommendations?.results ?? []) as TV[];
+  const similar = (tv.similar?.results ?? []) as TV[];
 
   return (
     <section id="related" className="z-3">
       <SectionTitle color="warning" className="mb-2 sm:mb-0 sm:translate-y-10">
         You may like
       </SectionTitle>
-      <Tabs
+      {(recommendations.length > 0 || similar.length > 0) && <Tabs
         aria-label="Related Section"
         variant="underlined"
         className="sm:w-full sm:justify-end"
@@ -34,7 +34,7 @@ const TvShowRelatedSection: React.FC<TvShowRelatedSectionProps> = ({ tv }) => {
             <TvShowRelatedList tvs={similar} />
           </Tab>
         )}
-      </Tabs>
+      </Tabs>}
     </section>
   );
 };

@@ -36,8 +36,10 @@ const TvShowsSeasonsSelection = forwardRef<HTMLElement, Props>(({ id, seasons },
   const [searchQuery] = useDebouncedValue(search, 300);
   const [layout, setLayout] = useState<"list" | "grid">("list");
   const [seasonNumber, setSeasonNumber] = useState(() =>
-    FILTERED_SEASONS[0].season_number.toString(),
+    FILTERED_SEASONS[0]?.season_number?.toString() ?? "0",
   );
+
+  if (FILTERED_SEASONS.length === 0) return null;
 
   return (
     <section ref={ref} id="seasons-episodes" className="z-3 flex flex-col gap-2">

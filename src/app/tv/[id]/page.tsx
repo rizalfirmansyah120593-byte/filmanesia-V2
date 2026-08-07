@@ -42,8 +42,10 @@ export default async function TVShowDetailPage({ params }: Props) {
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <div className="flex flex-col gap-10">
       <TvShowBackdropSection tv={tv} /><TvShowOverviewSection tv={tv} />
-      <TvShowCastsSection casts={tv.credits.cast as Cast[]} /><PhotosSection images={tv.images.backdrops as Image[]} type="tv" />
-      <TvShowsSeasonsSelection id={id} seasons={tv.seasons} /><TvShowRelatedSection tv={tv} />
+      {(tv.credits?.cast?.length ?? 0) > 0 && <TvShowCastsSection casts={(tv.credits?.cast ?? []) as Cast[]} />}
+      {(tv.images?.backdrops?.length ?? 0) > 0 && <PhotosSection images={(tv.images?.backdrops ?? []) as Image[]} type="tv" />}
+      {(tv.seasons?.length ?? 0) > 0 && <TvShowsSeasonsSelection id={id} seasons={tv.seasons ?? []} />}
+      <TvShowRelatedSection tv={tv} />
     </div>
   </div>;
 }

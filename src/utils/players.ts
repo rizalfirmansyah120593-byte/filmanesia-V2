@@ -18,6 +18,10 @@ const addSubtitleLanguage = (source: string, subtitleLanguage: SubtitleLanguage)
   return `${source}${separator}ds_lang=${subtitleLanguage}`;
 };
 
+/** Requests a lightweight default stream for providers that support quality query parameters. */
+const addDefaultQuality = (source: string): string =>
+  `${source}${source.includes("?") ? "&" : "?"}quality=480&max_quality=480`;
+
 /**
  * Generates a list of movie players with their respective titles and source URLs.
  * Each player is constructed using the provided movie ID.
@@ -141,7 +145,10 @@ export const getMoviePlayers = (
       source: `https://moviesapi.club/movie/${id}`,
       ads: true,
     },
-  ];
+  ].map((player) => ({
+    ...player,
+    source: addDefaultQuality(player.source),
+  }));
 };
 
 /**
@@ -280,5 +287,8 @@ export const getTvShowPlayers = (
       source: `https://moviesapi.club/tv/${id}-${season}-${episode}`,
       ads: true,
     },
-  ];
+  ].map((player) => ({
+    ...player,
+    source: addDefaultQuality(player.source),
+  }));
 };
