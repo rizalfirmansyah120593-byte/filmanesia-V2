@@ -41,6 +41,19 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
+  useEffect(() => {
+    const cachedSource = Number(window.localStorage.getItem("filmanesia-working-movie-source"));
+    if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
+      setSelectedSource(cachedSource);
+    }
+  }, [players.length, selectedSource, setSelectedSource]);
+
+  useEffect(() => {
+    if (lastEvent === "play") {
+      window.localStorage.setItem("filmanesia-working-movie-source", String(selectedSource));
+    }
+  }, [lastEvent, selectedSource]);
+
   const moveToNextSource = () => {
     if (selectedSubtitle !== "off" && selectedSource >= 10) {
       setSelectedSubtitle("off");
@@ -59,7 +72,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   useEffect(() => {
     const fallbackTimer = window.setTimeout(() => {
       if (lastEvent !== "play") moveToNextSource();
-    }, 12000);
+    }, 8000);
 
     return () => window.clearTimeout(fallbackTimer);
   }, [lastEvent, selectedSource, selectedSubtitle]);

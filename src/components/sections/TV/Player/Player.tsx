@@ -66,6 +66,19 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
 
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
+  useEffect(() => {
+    const cachedSource = Number(window.localStorage.getItem("filmanesia-working-tv-source"));
+    if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
+      setSelectedSource(cachedSource);
+    }
+  }, [players.length, selectedSource, setSelectedSource]);
+
+  useEffect(() => {
+    if (lastEvent === "play") {
+      window.localStorage.setItem("filmanesia-working-tv-source", String(selectedSource));
+    }
+  }, [lastEvent, selectedSource]);
+
   const moveToNextSource = () => {
     if (selectedSubtitle !== "off" && selectedSource >= 10) {
       setSelectedSubtitle("off");
@@ -84,7 +97,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   useEffect(() => {
     const fallbackTimer = window.setTimeout(() => {
       if (lastEvent !== "play") moveToNextSource();
-    }, 12000);
+    }, 8000);
 
     return () => window.clearTimeout(fallbackTimer);
   }, [lastEvent, selectedSource, selectedSubtitle]);
