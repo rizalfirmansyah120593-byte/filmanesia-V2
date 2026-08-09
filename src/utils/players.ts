@@ -26,7 +26,13 @@ const addWyzieSubtitle = (
   episode?: { season: number; episode: number },
 ) => {
   if (subtitleLanguage === "off") return source;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  // The player is hosted on a different origin. A relative subtitle URL is
+  // therefore resolved against the provider (for example vidlink.pro), not
+  // against Filmanesia, and the track silently fails to load.
+  const baseUrl =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com";
   const params = new URLSearchParams({ tmdbId: String(tmdbId), lang: subtitleLanguage });
   if (episode) {
     params.set("season", String(episode.season));
@@ -35,10 +41,6 @@ const addWyzieSubtitle = (
   const subtitleUrl = `${baseUrl}/api/subtitles?${params.toString()}`;
   return `${source}${source.includes("?") ? "&" : "?"}sub_file=${encodeURIComponent(subtitleUrl)}&sub_label=${encodeURIComponent(subtitleLanguage === "id" ? "Indonesia" : subtitleLanguage === "en" ? "English" : subtitleLanguage)}`;
 };
-
-/** Requests a lightweight default stream for providers that support quality query parameters. */
-const addDefaultQuality = (source: string): string =>
-  `${source}${source.includes("?") ? "&" : "?"}quality=480&max_quality=480`;
 
 /**
  * Generates a list of movie players with their respective titles and source URLs.
@@ -163,10 +165,7 @@ export const getMoviePlayers = (
       source: `https://moviesapi.club/movie/${id}`,
       ads: true,
     },
-  ].map((player) => ({
-    ...player,
-    source: addDefaultQuality(player.source),
-  }));
+  ];
 };
 
 /**
@@ -204,6 +203,19 @@ export const getTvShowPlayers = (
       fast: true,
       ads: true,
       resumable: true,
+      supportsSubtitles: true,
+    },
+    {
+      title: "VidSrc",
+      // Current documented TV format. Keep this as the first independent
+      // fallback because provider availability can vary by title/region.
+      source: addSubtitleLanguage(
+        `https://vidsrc.ru/tv/${id}/${season}/${episode}?autoplay=1`,
+        subtitleLanguage,
+      ),
+      recommended: true,
+      fast: true,
+      ads: true,
       supportsSubtitles: true,
     },
     {
@@ -305,8 +317,5 @@ export const getTvShowPlayers = (
       source: `https://moviesapi.club/tv/${id}-${season}-${episode}`,
       ads: true,
     },
-  ].map((player) => ({
-    ...player,
-    source: addDefaultQuality(player.source),
-  }));
+  ];
 };

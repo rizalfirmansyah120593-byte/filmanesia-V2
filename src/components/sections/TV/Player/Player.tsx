@@ -17,6 +17,10 @@ const TvShowPlayerHeader = dynamic(() => import("./Header"));
 const TvShowPlayerSourceSelection = dynamic(() => import("./SourceSelection"));
 const TvShowPlayerEpisodeSelection = dynamic(() => import("./EpisodeSelection"));
 
+// Version the preference because the provider list is data, not a stable API;
+// old numeric indexes can point at a different provider after an update.
+const TV_SOURCE_STORAGE_KEY = "filmanesia-working-tv-source-v2";
+
 export interface TvShowPlayerProps {
   tv: TvShowDetails;
   id: number;
@@ -45,9 +49,9 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   const [episodeOpened, episodeHandlers] = useDisclosure(false);
   const [selectedSource, setSelectedSource] = useQueryState<number>(
     "src",
-    // VidLink is not playable for some TV/K-Drama episodes. VidSrc 5
-    // (index 14) has broader TV coverage and subtitle support.
-    parseAsInteger.withDefault(14),
+    // VidLink documents this exact TV URL format and is the most stable
+    // default. Users can still switch to the independent fallbacks below.
+    parseAsInteger.withDefault(0),
   );
   const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
     "sub",
@@ -85,15 +89,15 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   }, [PLAYER.supportsSubtitles, players, selectedSource, selectedSubtitle, setSelectedSource]);
 
   useEffect(() => {
-    const cachedSource = Number(window.localStorage.getItem("filmanesia-working-tv-source"));
-    if (selectedSource === 14 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
+    const cachedSource = Number(window.localStorage.getItem(TV_SOURCE_STORAGE_KEY));
+    if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
       setSelectedSource(cachedSource);
     }
   }, [players.length, selectedSource, setSelectedSource]);
 
   useEffect(() => {
     if (lastEvent === "play") {
-      window.localStorage.setItem("filmanesia-working-tv-source", String(selectedSource));
+      window.localStorage.setItem(TV_SOURCE_STORAGE_KEY, String(selectedSource));
     }
   }, [lastEvent, selectedSource]);
 
