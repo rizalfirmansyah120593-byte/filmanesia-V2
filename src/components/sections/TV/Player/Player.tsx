@@ -3,12 +3,11 @@ import { IS_PRODUCTION } from "@/utils/constants";
 import { cn } from "@/utils/helpers";
 import { DEFAULT_SUBTITLE_LANGUAGE, getTvShowPlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
-import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { memo, useEffect, useMemo, useState } from "react";
 import { Episode, TvShowDetails } from "tmdb-ts";
-import useBreakpoints from "@/hooks/useBreakpoints";
 import { SpacingClasses } from "@/utils/constants";
 import { usePlayerEvents } from "@/hooks/usePlayerEvents";
 import { AdsterraPlayerGate } from "@/components/ads/Adsterra";
@@ -41,10 +40,8 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   startAt,
   ...props
 }) => {
-  const { mobile } = useBreakpoints();
   const [iframeReady, setIframeReady] = useState(false);
   const [playerUnlocked, setPlayerUnlocked] = useState(() => !IS_PRODUCTION);
-  const idle = useIdle(3000);
   const [sourceOpened, sourceHandlers] = useDisclosure(false);
   const [episodeOpened, episodeHandlers] = useDisclosure(false);
   const [selectedSource, setSelectedSource] = useQueryState<number>(
@@ -148,7 +145,6 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
         <TvShowPlayerHeader
           id={id}
           episode={episode}
-          hidden={idle && !mobile}
           selectedSource={selectedSource}
           onOpenSource={sourceHandlers.open}
           onOpenSubtitle={sourceHandlers.open}
@@ -163,11 +159,11 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
               loading="eager"
-              key={PLAYER.title}
+              key={`${PLAYER.title}-${selectedSubtitle}`}
               src={PLAYER.source}
               onLoad={() => setIframeReady(true)}
               onError={moveToNextSource}
-              className={cn("z-10 h-full w-full", { "pointer-events-none": idle && !mobile })}
+              className="z-10 h-full w-full"
             />}
           {!playerUnlocked && <AdsterraPlayerGate onContinue={() => setPlayerUnlocked(true)} />}
         </Card>

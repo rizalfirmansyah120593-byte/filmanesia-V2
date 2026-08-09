@@ -1,11 +1,10 @@
 import { IS_PRODUCTION, SpacingClasses } from "@/utils/constants";
 import { siteConfig } from "@/config/site";
-import useBreakpoints from "@/hooks/useBreakpoints";
 import { cn } from "@/utils/helpers";
 import { mutateMovieTitle } from "@/utils/movies";
 import { DEFAULT_SUBTITLE_LANGUAGE, getMoviePlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
-import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect, useMemo, useState } from "react";
@@ -23,8 +22,6 @@ interface MoviePlayerProps {
 
 const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   const title = mutateMovieTitle(movie);
-  const idle = useIdle(3000);
-  const { mobile } = useBreakpoints();
   const [iframeReady, setIframeReady] = useState(false);
   const [playerUnlocked, setPlayerUnlocked] = useState(() => !IS_PRODUCTION);
   const [opened, handlers] = useDisclosure(false);
@@ -119,7 +116,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
           onOpenSource={handlers.open}
           onOpenSubtitle={handlers.open}
           selectedSubtitle={selectedSubtitle}
-          hidden={idle && !mobile}
         />
         <Card shadow="md" radius="none" className="relative aspect-video h-auto w-full">
           <Skeleton className="absolute h-full w-full" />
@@ -127,11 +123,11 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
               loading="eager"
-              key={PLAYER.title}
+              key={`${PLAYER.title}-${selectedSubtitle}`}
               src={PLAYER.source}
               onLoad={() => setIframeReady(true)}
               onError={moveToNextSource}
-              className={cn("z-10 h-full w-full", { "pointer-events-none": idle && !mobile })}
+              className="z-10 h-full w-full"
             />}
           {!playerUnlocked && <AdsterraPlayerGate onContinue={() => setPlayerUnlocked(true)} />}
         </Card>
