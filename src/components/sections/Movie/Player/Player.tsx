@@ -103,6 +103,8 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
           id={movie.id}
           movieName={title}
           onOpenSource={handlers.open}
+          onOpenSubtitle={handlers.open}
+          selectedSubtitle={selectedSubtitle}
           hidden={idle && !mobile}
         />
         <Card shadow="md" radius="none" className="relative h-screen">

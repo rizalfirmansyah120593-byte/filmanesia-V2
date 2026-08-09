@@ -130,6 +130,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
           hidden={idle && !mobile}
           selectedSource={selectedSource}
           onOpenSource={sourceHandlers.open}
+          onOpenSubtitle={sourceHandlers.open}
           onOpenEpisode={episodeHandlers.open}
           selectedSubtitle={selectedSubtitle}
           {...props}

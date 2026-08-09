@@ -1,12 +1,15 @@
 import { cn } from "@/utils/helpers";
-import { ArrowLeft, Server } from "@/utils/icons";
+import { ArrowLeft, Captions, Server } from "@/utils/icons";
 import ActionButton from "./ActionButton";
+import { SubtitleLanguage } from "@/utils/players";
 
 interface MoviePlayerHeaderProps {
   id: number;
   movieName: string;
   hidden?: boolean;
   onOpenSource: () => void;
+  onOpenSubtitle: () => void;
+  selectedSubtitle: SubtitleLanguage;
 }
 
 const MoviePlayerHeader: React.FC<MoviePlayerHeaderProps> = ({
@@ -14,6 +17,8 @@ const MoviePlayerHeader: React.FC<MoviePlayerHeaderProps> = ({
   movieName,
   hidden,
   onOpenSource,
+  onOpenSubtitle,
+  selectedSubtitle,
 }) => {
   return (
     <div
@@ -31,6 +36,9 @@ const MoviePlayerHeader: React.FC<MoviePlayerHeaderProps> = ({
         <p className="text-sm text-white text-shadow-lg sm:text-lg lg:text-xl">{movieName}</p>
       </div>
       <div className="flex items-center gap-4">
+        <ActionButton label="Subtitle" tooltip={`Subtitle: ${selectedSubtitle === "id" ? "Indonesia" : selectedSubtitle === "en" ? "English" : "Nonaktif"}`} onClick={onOpenSubtitle}>
+          <Captions size={34} />
+        </ActionButton>
         <ActionButton label="Sources" tooltip="Sources" onClick={onOpenSource}>
           <Server size={34} />
         </ActionButton>

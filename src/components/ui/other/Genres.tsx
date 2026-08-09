@@ -18,7 +18,7 @@ const Genres: React.FC<GenresProps> = ({
   },
 }) => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex w-full flex-wrap justify-center gap-2">
       {genres.map(({ id, name }) => (
         <Chip as={Link} href={`/discover?genres=${id}&content=${type}`} key={id} {...chipProps}>
           {name}

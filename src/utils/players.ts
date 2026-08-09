@@ -34,7 +34,7 @@ const addDefaultQuality = (source: string): string =>
 export const getMoviePlayers = (
   id: string | number,
   startAt?: number,
-  subtitleLanguage: SubtitleLanguage = "off",
+  subtitleLanguage: SubtitleLanguage = "id",
 ): PlayersProps[] => {
   return [
     {
@@ -167,7 +167,7 @@ export const getTvShowPlayers = (
   season: number,
   episode: number,
   startAt?: number,
-  subtitleLanguage: SubtitleLanguage = "off",
+  subtitleLanguage: SubtitleLanguage = "id",
 ): PlayersProps[] => {
   return [
     {

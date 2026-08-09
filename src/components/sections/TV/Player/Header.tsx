@@ -1,5 +1,5 @@
 import { cn } from "@/utils/helpers";
-import { ArrowLeft, List, Next, Prev, Server } from "@/utils/icons";
+import { ArrowLeft, Captions, List, Next, Prev, Server } from "@/utils/icons";
 import ActionButton from "./ActionButton";
 import { TvShowPlayerProps } from "./Player";
 import { SubtitleLanguage } from "@/utils/players";
@@ -9,6 +9,7 @@ interface TvShowPlayerHeaderProps extends Omit<TvShowPlayerProps, "episodes" | "
   selectedSource: number;
   selectedSubtitle: SubtitleLanguage;
   onOpenSource: () => void;
+  onOpenSubtitle: () => void;
   onOpenEpisode: () => void;
 }
 
@@ -23,6 +24,7 @@ const TvShowPlayerHeader: React.FC<TvShowPlayerHeaderProps> = ({
   nextEpisodeNumber,
   prevEpisodeNumber,
   onOpenSource,
+  onOpenSubtitle,
   onOpenEpisode,
 }) => {
   return (
@@ -44,6 +46,9 @@ const TvShowPlayerHeader: React.FC<TvShowPlayerHeaderProps> = ({
         </p>
       </div>
       <div className="flex items-center gap-4">
+        <ActionButton label="Subtitle" tooltip={`Subtitle: ${selectedSubtitle === "id" ? "Indonesia" : selectedSubtitle === "en" ? "English" : "Nonaktif"}`} onClick={onOpenSubtitle}>
+          <Captions size={34} />
+        </ActionButton>
         <ActionButton
           disabled={!prevEpisodeNumber}
           label="Previous Episode"
