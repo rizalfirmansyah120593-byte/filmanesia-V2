@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{
       userAgent: "*",
-      allow: ["/", "/movie/", "/tv/", "/discover", "/*?lang=id", "/*?lang=en", "/*?lang=ms"],
+      allow: ["/", "/movie/", "/tv/", "/discover", "/genre/", "/negara/", "/tahun/"],
       disallow: ["/api/", "/auth/", "/library", "/movie/*/player", "/tv/*/player", "/*?*"],
     }],
     sitemap: `${base}/sitemap.xml`,

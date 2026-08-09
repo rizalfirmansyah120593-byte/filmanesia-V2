@@ -3,18 +3,6 @@ import { tmdb } from "@/api/tmdb";
 
 export const revalidate = 86400;
 
-const supportedLanguages = {
-  "id-ID": "id",
-  "en-US": "en",
-  "ms-MY": "ms",
-};
-
-const languageAlternates = (url: string) => ({
-  languages: Object.fromEntries(
-    Object.entries(supportedLanguages).map(([locale, language]) => [locale, `${url}?lang=${language}`]),
-  ),
-});
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com";
   const lastModified = new Date();
@@ -46,18 +34,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified,
       changeFrequency: route === "" ? "daily" : "monthly",
       priority: route === "" ? 1 : 0.7,
-      alternates: languageAlternates(url),
     } as MetadataRoute.Sitemap[number];
   });
 
-  const pages = Array.from({ length: 20 }, (_, index) => index + 1);
-  const [moviePages, tvPages] = await Promise.all([
-    Promise.all(pages.map((page) => tmdb.movies.popular({ page }).catch(() => null))),
-    Promise.all(pages.map((page) => tmdb.tvShows.popular({ page }).catch(() => null))),
+  // Refresh the first pages of high-intent lists so new and trending titles are
+  // discovered without creating an unbounded sitemap.
+  const pages = Array.from({ length: 10 }, (_, index) => index + 1);
+  const [movieSources, tvSources] = await Promise.all([
+    Promise.all([
+      tmdb.trending.trending("movie", "day").catch(() => null),
+      tmdb.trending.trending("movie", "week").catch(() => null),
+      tmdb.movies.nowPlaying({ page: 1 }).catch(() => null),
+      tmdb.movies.popular({ page: 1 }).catch(() => null),
+      tmdb.movies.topRated({ page: 1 }).catch(() => null),
+      tmdb.movies.upcoming({ page: 1 }).catch(() => null),
+      ...pages.slice(1).map((page) => tmdb.movies.popular({ page }).catch(() => null)),
+    ]),
+    Promise.all([
+      tmdb.trending.trending("tv", "day").catch(() => null),
+      tmdb.trending.trending("tv", "week").catch(() => null),
+      tmdb.tvShows.popular({ page: 1 }).catch(() => null),
+      tmdb.tvShows.topRated({ page: 1 }).catch(() => null),
+      ...pages.slice(1).map((page) => tmdb.tvShows.popular({ page }).catch(() => null)),
+    ]),
   ]);
 
-  const movies = moviePages.flatMap((result) => result?.results ?? []);
-  const shows = tvPages.flatMap((result) => result?.results ?? []);
+  const movies = Array.from(new Map(movieSources.flatMap((result) => result?.results ?? []).map((movie) => [movie.id, movie])).values());
+  const shows = Array.from(new Map(tvSources.flatMap((result) => result?.results ?? []).map((show) => [show.id, show])).values());
   const movieUrls = movies.map((movie) => {
     const url = `${base}/movie/${movie.id}`;
     return {
@@ -66,7 +69,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.8,
       images: movie.poster_path ? [`https://image.tmdb.org/t/p/w500${movie.poster_path}`] : undefined,
-      alternates: languageAlternates(url),
     };
   });
   const tvUrls = shows.map((show) => {
@@ -77,7 +79,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.8,
       images: show.poster_path ? [`https://image.tmdb.org/t/p/w500${show.poster_path}`] : undefined,
-      alternates: languageAlternates(url),
     };
   });
 
