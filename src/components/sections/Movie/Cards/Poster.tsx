@@ -56,7 +56,7 @@ const MoviePosterCard: React.FC<MoviePosterCardProps> = ({
       >
         <Link href={`/movie/${movie.id}`} ref={ref} {...longPress()}>
           {variant === "full" && (
-            <div className="group motion-preset-focus hover:border-primary relative aspect-2/3 overflow-hidden rounded-lg border-[3px] border-transparent text-white transition-colors">
+            <div className="group motion-preset-focus hover:border-primary relative h-[180px] w-full overflow-hidden rounded-lg border-[3px] border-transparent text-white transition-colors md:aspect-2/3 md:h-auto">
               {hovered && (
                 <Icon
                   icon="line-md:play-filled"
@@ -92,7 +92,7 @@ const MoviePosterCard: React.FC<MoviePosterCardProps> = ({
                 loading={isPriority ? "eager" : "lazy"}
                 decoding="async"
                 // ----------------------------------------
-                className="z-0 aspect-2/3 h-[250px] object-cover object-center transition group-hover:scale-110 md:h-[300px]"
+                className="z-0 h-full w-full object-cover object-center transition group-hover:scale-110 md:aspect-2/3 md:h-[300px]"
                 classNames={{
                   img: "group-hover:opacity-70",
                 }}

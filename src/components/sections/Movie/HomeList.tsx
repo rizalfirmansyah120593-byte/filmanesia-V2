@@ -39,9 +39,14 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
           {name === "Today's Trending Movies" ? (
             <div className="trending-marquee group" aria-label="Today's Trending Movies">
               <div className="trending-marquee-track group-hover:[animation-play-state:paused] motion-reduce:animate-none">
-                {[...(data?.results ?? []), ...(data?.results ?? [])].map((movie, index) => (
-                  <div key={`${movie.id}-${index}`} className="flex min-h-fit max-w-fit shrink-0 items-center py-2">
+                {(data?.results ?? []).map((movie, index) => (
+                  <div key={movie.id} className="trending-item flex min-h-fit w-full shrink-0 items-center justify-center py-2 md:w-auto">
                     <MoviePosterCard movie={movie} isPriority={index < 8} />
+                  </div>
+                ))}
+                {(data?.results ?? []).map((movie, index) => (
+                  <div key={`${movie.id}-loop`} className="trending-loop-item flex min-h-fit w-full shrink-0 items-center justify-center py-2 md:w-auto">
+                    <MoviePosterCard movie={movie} isPriority={false} />
                   </div>
                 ))}
               </div>
