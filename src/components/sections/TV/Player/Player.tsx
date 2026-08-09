@@ -45,7 +45,9 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   const [episodeOpened, episodeHandlers] = useDisclosure(false);
   const [selectedSource, setSelectedSource] = useQueryState<number>(
     "src",
-    parseAsInteger.withDefault(0),
+    // VidLink is not playable for some TV/K-Drama episodes. VidSrc 5
+    // (index 14) has broader TV coverage and subtitle support.
+    parseAsInteger.withDefault(14),
   );
   const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
     "sub",
@@ -84,7 +86,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
 
   useEffect(() => {
     const cachedSource = Number(window.localStorage.getItem("filmanesia-working-tv-source"));
-    if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
+    if (selectedSource === 14 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
       setSelectedSource(cachedSource);
     }
   }, [players.length, selectedSource, setSelectedSource]);
