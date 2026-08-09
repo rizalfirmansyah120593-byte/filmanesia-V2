@@ -74,16 +74,14 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
   useEffect(() => {
-    if (selectedSubtitle === "off" || PLAYER.supportsSubtitles) return;
+    if (selectedSubtitle === "off" || PLAYER.title === "VidLink") return;
 
-    const subtitleSource = players.findIndex((player) => player.title === "VidSrc 5");
-    const fallbackSource = players.findIndex((player) => player.supportsSubtitles);
-    const nextSource = subtitleSource >= 0 ? subtitleSource : fallbackSource;
+    const nextSource = players.findIndex((player) => player.title === "VidLink");
 
     if (nextSource >= 0 && nextSource !== selectedSource) {
       setSelectedSource(nextSource);
     }
-  }, [PLAYER.supportsSubtitles, players, selectedSource, selectedSubtitle, setSelectedSource]);
+  }, [PLAYER.title, players, selectedSource, selectedSubtitle, setSelectedSource]);
 
   useEffect(() => {
     const cachedSource = Number(window.localStorage.getItem(TV_SOURCE_STORAGE_KEY));
@@ -127,11 +125,9 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   }, [PLAYER.source]);
 
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
-    if (subtitle !== "off" && !PLAYER.supportsSubtitles) {
-      const subtitleSource = players.findIndex((player) => player.title === "VidSrc 5") >= 0
-        ? players.findIndex((player) => player.title === "VidSrc 5")
-        : players.findIndex((player) => player.supportsSubtitles);
-      if (subtitleSource >= 0) setSelectedSource(subtitleSource);
+    if (subtitle !== "off") {
+      const subtitleSource = players.findIndex((player) => player.title === "VidLink");
+      if (subtitleSource >= 0 && subtitleSource !== selectedSource) setSelectedSource(subtitleSource);
     }
 
     setSelectedSubtitle(subtitle);

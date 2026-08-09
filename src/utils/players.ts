@@ -29,10 +29,11 @@ const addWyzieSubtitle = (
   // The player is hosted on a different origin. A relative subtitle URL is
   // therefore resolved against the provider (for example vidlink.pro), not
   // against Filmanesia, and the track silently fails to load.
-  const baseUrl =
+  const baseUrl = (
     typeof window !== "undefined"
       ? window.location.origin
-      : process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com";
+      : process.env.NEXT_PUBLIC_SITE_URL || "https://filmanesia.com"
+  ).replace(/\/$/, "");
   const params = new URLSearchParams({ tmdbId: String(tmdbId), lang: subtitleLanguage });
   if (episode) {
     params.set("season", String(episode.season));
@@ -59,7 +60,7 @@ export const getMoviePlayers = (
   return [
     {
       title: "VidLink",
-      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=true&startAt=${startAt || ""}`, subtitleLanguage), id, subtitleLanguage),
+      source: addWyzieSubtitle(`https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=true&startAt=${startAt || ""}`, id, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
@@ -68,7 +69,7 @@ export const getMoviePlayers = (
     },
     {
       title: "VidLink 2",
-      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=true&startAt=${startAt}`, subtitleLanguage), id, subtitleLanguage),
+      source: addWyzieSubtitle(`https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=true&startAt=${startAt}`, id, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
@@ -189,7 +190,7 @@ export const getTvShowPlayers = (
   return [
     {
       title: "VidLink",
-      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=true&startAt=${startAt || ""}`, subtitleLanguage), id, subtitleLanguage, { season, episode }),
+      source: addWyzieSubtitle(`https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=true&startAt=${startAt || ""}`, id, subtitleLanguage, { season, episode }),
       recommended: true,
       fast: true,
       ads: true,
@@ -198,7 +199,7 @@ export const getTvShowPlayers = (
     },
     {
       title: "VidLink 2",
-      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=true&startAt=${startAt}`, subtitleLanguage), id, subtitleLanguage, { season, episode }),
+      source: addWyzieSubtitle(`https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=true&startAt=${startAt}`, id, subtitleLanguage, { season, episode }),
       recommended: true,
       fast: true,
       ads: true,

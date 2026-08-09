@@ -5,10 +5,15 @@ const allowedLanguages = new Set(["id", "en", "ms", "es", "fr"]);
 
 const toVtt = (subtitle: string) => {
   const normalized = subtitle.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").trim();
-  if (normalized.startsWith("WEBVTT")) return normalized.endsWith("\n") ? normalized : `${normalized}\n`;
+  if (normalized.startsWith("WEBVTT")) {
+    return normalized.endsWith("\n") ? normalized : `${normalized}\n`;
+  }
 
-  const cues = normalized.replace(/^(?:\d+\n)?/, "").replace(/\n{3,}/g, "\n\n");
-  return `WEBVTT\n\n${cues.replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, "$1.$2")}\n`;
+  const cues = normalized
+    .replace(/^(?:\d+\n)?/, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/(\d{1,2}:\d{2}:\d{2}),(\d{3})/g, "$1.$2");
+  return `WEBVTT\n\n${cues}\n`;
 };
 
 export async function GET(request: Request) {
@@ -57,8 +62,10 @@ export async function GET(request: Request) {
     return new NextResponse(toVtt(await subtitleResponse.text()), {
       headers: {
         "Content-Type": "text/vtt; charset=utf-8",
+        "Content-Disposition": "inline",
         "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
       },
     });
   } catch {
