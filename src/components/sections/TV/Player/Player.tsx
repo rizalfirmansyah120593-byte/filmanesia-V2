@@ -136,7 +136,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
           {...props}
         />
 
-        <Card shadow="md" radius="none" className="relative aspect-video h-auto w-full md:aspect-auto md:h-screen">
+        <Card shadow="md" radius="none" className="relative aspect-video h-auto w-full">
           <Skeleton className="absolute h-full w-full" />
           <iframe
             allow="autoplay; fullscreen; picture-in-picture"
