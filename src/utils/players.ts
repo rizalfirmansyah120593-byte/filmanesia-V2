@@ -18,6 +18,23 @@ const addSubtitleLanguage = (source: string, subtitleLanguage: SubtitleLanguage)
   return `${source}${separator}ds_lang=${subtitleLanguage}`;
 };
 
+const addWyzieSubtitle = (
+  source: string,
+  tmdbId: string | number,
+  subtitleLanguage: SubtitleLanguage,
+  episode?: { season: number; episode: number },
+) => {
+  if (subtitleLanguage === "off") return source;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const params = new URLSearchParams({ tmdbId: String(tmdbId), lang: subtitleLanguage });
+  if (episode) {
+    params.set("season", String(episode.season));
+    params.set("episode", String(episode.episode));
+  }
+  const subtitleUrl = `${baseUrl}/api/subtitles?${params.toString()}`;
+  return `${source}${source.includes("?") ? "&" : "?"}sub_file=${encodeURIComponent(subtitleUrl)}&sub_label=${encodeURIComponent(subtitleLanguage === "id" ? "Indonesia" : subtitleLanguage === "en" ? "English" : subtitleLanguage)}`;
+};
+
 /** Requests a lightweight default stream for providers that support quality query parameters. */
 const addDefaultQuality = (source: string): string =>
   `${source}${source.includes("?") ? "&" : "?"}quality=480&max_quality=480`;
@@ -39,7 +56,7 @@ export const getMoviePlayers = (
   return [
     {
       title: "VidLink",
-      source: addSubtitleLanguage(`https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage),
+      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/movie/${id}?player=jw&primaryColor=006fee&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage), id, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
@@ -48,7 +65,7 @@ export const getMoviePlayers = (
     },
     {
       title: "VidLink 2",
-      source: addSubtitleLanguage(`https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=false&startAt=${startAt}`, subtitleLanguage),
+      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=false&startAt=${startAt}`, subtitleLanguage), id, subtitleLanguage),
       recommended: true,
       fast: true,
       ads: true,
@@ -172,7 +189,7 @@ export const getTvShowPlayers = (
   return [
     {
       title: "VidLink",
-      source: addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage),
+      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?player=jw&primaryColor=f5a524&secondaryColor=a2a2a2&iconColor=eefdec&autoplay=false&startAt=${startAt || ""}`, subtitleLanguage), id, subtitleLanguage, { season, episode }),
       recommended: true,
       fast: true,
       ads: true,
@@ -181,7 +198,7 @@ export const getTvShowPlayers = (
     },
     {
       title: "VidLink 2",
-      source: addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=false&startAt=${startAt}`, subtitleLanguage),
+      source: addWyzieSubtitle(addSubtitleLanguage(`https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=false&startAt=${startAt}`, subtitleLanguage), id, subtitleLanguage, { season, episode }),
       recommended: true,
       fast: true,
       ads: true,
