@@ -45,6 +45,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     "similar",
     "reviews",
     "watch/providers",
+    "external_ids",
   ]).catch(() => null);
 
   if (!movie) {
@@ -72,7 +73,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
 
       <div className="flex flex-col gap-10">
         <BackdropSection movie={movie} />
-        <OverviewSection movie={movie} />
+        <OverviewSection movie={movie} imdbId={movie.external_ids?.imdb_id} />
         <CastsSection casts={movie.credits.cast as Cast[]} />
         <PhotosSection images={movie.images.backdrops as Image[]} />
         <RelatedSection movie={movie} />

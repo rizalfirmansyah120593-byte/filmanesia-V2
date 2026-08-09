@@ -18,12 +18,14 @@ import Link from "next/link";
 import { SavedMovieDetails } from "@/types/movie";
 import LocalizedOverview from "@/components/ui/other/LocalizedOverview";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import OmdbRating from "@/components/ui/other/OmdbRating";
 
 interface OverviewSectionProps {
   movie: AppendToResponse<MovieDetails, "videos"[], "movie">;
+  imdbId?: string;
 }
 
-const OverviewSection: React.FC<OverviewSectionProps> = ({ movie }) => {
+const OverviewSection: React.FC<OverviewSectionProps> = ({ movie, imdbId }) => {
   const releaseYear = new Date(movie.release_date).getFullYear();
   const posterImage = getPosterThumbnailUrl(movie.poster_path);
   const title = mutateMovieTitle(movie);
@@ -88,6 +90,7 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ movie }) => {
               <Rating rate={movie?.vote_average || 0} />
             </div>
             <Genres genres={movie.genres} />
+            <OmdbRating imdbId={imdbId} />
           </div>
 
           <div id="action" className="flex w-full flex-wrap justify-between gap-4 md:gap-0">
