@@ -35,12 +35,19 @@ export async function GET(request: Request) {
   }
 
   try {
-    const response = await fetch(`https://sub.wyzie.io/search?${params}`, {
+    let response = await fetch(`https://sub.wyzie.io/search?${params}`, {
       next: { revalidate: 3600 },
     });
     if (!response.ok) return new NextResponse("Subtitle tidak tersedia", { status: 404 });
 
-    const results = (await response.json()) as Array<{ url?: string; language?: string }>;
+    let results = (await response.json()) as Array<{ url?: string; language?: string }>;
+    // AI translation is available for eligible Wyzie keys when no native
+    // Indonesian track exists.
+    if (results.length === 0) {
+      params.set("source", "ai");
+      response = await fetch(`https://sub.wyzie.io/search?${params}`, { next: { revalidate: 3600 } });
+      if (response.ok) results = (await response.json()) as Array<{ url?: string; language?: string }>;
+    }
     const match = results.find((item) => item.language === language) ?? results[0];
     if (!match?.url) return new NextResponse("Subtitle tidak tersedia", { status: 404 });
 
