@@ -1,3 +1,5 @@
+"use client";
+
 import Rating from "@/components/ui/other/Rating";
 import VaulDrawer from "@/components/ui/overlay/VaulDrawer";
 import useBreakpoints from "@/hooks/useBreakpoints";

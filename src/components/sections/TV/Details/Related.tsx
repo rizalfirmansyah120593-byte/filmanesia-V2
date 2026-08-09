@@ -1,3 +1,5 @@
+"use client";
+
 import SectionTitle from "@/components/ui/other/SectionTitle";
 import { isEmpty } from "@/utils/helpers";
 import { Tab, Tabs } from "@heroui/react";
