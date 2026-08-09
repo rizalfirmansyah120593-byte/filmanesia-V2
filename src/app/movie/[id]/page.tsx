@@ -44,7 +44,6 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     "recommendations",
     "similar",
     "reviews",
-    "watch/providers",
     "external_ids",
   ]).catch(() => null);
 

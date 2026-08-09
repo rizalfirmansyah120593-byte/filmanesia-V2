@@ -15,7 +15,9 @@ const TvShowsSeasonsSelection = dynamic(() => import("@/components/sections/TV/D
 type Props = { params: Promise<{ id: string }> };
 
 async function getShow(id: number) {
-  return tmdb.tvShows.details(id, ["images", "videos", "credits", "keywords", "recommendations", "similar", "reviews", "watch/providers"]);
+  // Keep this request limited to appendable TMDB resources. Watch providers
+  // use a separate endpoint and are not consumed by this page.
+  return tmdb.tvShows.details(id, ["images", "videos", "credits", "recommendations", "similar"]);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
