@@ -68,6 +68,18 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
   useEffect(() => {
+    if (selectedSubtitle === "off" || PLAYER.supportsSubtitles) return;
+
+    const subtitleSource = players.findIndex((player) => player.title === "VidSrc 5");
+    const fallbackSource = players.findIndex((player) => player.supportsSubtitles);
+    const nextSource = subtitleSource >= 0 ? subtitleSource : fallbackSource;
+
+    if (nextSource >= 0 && nextSource !== selectedSource) {
+      setSelectedSource(nextSource);
+    }
+  }, [PLAYER.supportsSubtitles, players, selectedSource, selectedSubtitle, setSelectedSource]);
+
+  useEffect(() => {
     const cachedSource = Number(window.localStorage.getItem("filmanesia-working-tv-source"));
     if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
       setSelectedSource(cachedSource);
