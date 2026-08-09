@@ -77,14 +77,18 @@ export const getMoviePlayers = (
       supportsSubtitles: true,
     },
     {
-      title: "VidKing",
-      // NOTE: VidKing has a known issue with the `progress` query parameter where it stuck at that timestamp.
-      // Currently, this player can save playback progress but cannot resume from a specific timestamp.
-      // The `progress` parameter is commented out in the source URL until this is resolved.
-      source: `https://www.vidking.net/embed/movie/${id}?color=006fee&autoplay=false`, //&progress=${startAt || ""}`,
+      title: "VidLink Backup",
+      // VidKing can return a full-page provider error in an iframe for some titles.
+      // Keep this index as a compatible backup for existing ?src=2 links.
+      source: addWyzieSubtitle(
+        `https://vidlink.pro/movie/${id}?primaryColor=006fee&autoplay=true&startAt=${startAt || ""}`,
+        id,
+        subtitleLanguage,
+      ),
       recommended: true,
       fast: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "<Embed>",
@@ -220,14 +224,19 @@ export const getTvShowPlayers = (
       supportsSubtitles: true,
     },
     {
-      title: "VidKing",
-      // NOTE: VidKing has a known issue with the `progress` query parameter where it stuck at that timestamp.
-      // Currently, this player can save playback progress but cannot resume from a specific timestamp.
-      // The `progress` parameter is commented out in the source URL until this is resolved.
-      source: `https://www.vidking.net/embed/tv/${id}/${season}/${episode}?color=f5a524&autoplay=false`, //&progress=${startAt || ""}`,
+      title: "VidLink Backup",
+      // VidKing can return a full-page provider error in an iframe for some titles.
+      // Keep this index as a compatible backup for existing source links.
+      source: addWyzieSubtitle(
+        `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=f5a524&autoplay=true&startAt=${startAt || ""}`,
+        id,
+        subtitleLanguage,
+        { season, episode },
+      ),
       recommended: true,
       fast: true,
       resumable: true,
+      supportsSubtitles: true,
     },
     {
       title: "<Embed>",
