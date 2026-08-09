@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { IS_PRODUCTION } from "@/utils/constants";
 
 const ADSTERRA_HOST = "https://alwaysmulticulturallanding.com";
+export const ADSTERRA_SMARTLINK_URL = `${ADSTERRA_HOST}/f12g9ctu?key=061c7594408bc94dd775b8d4148307ac`;
 
 const adLabelClassName = "sr-only";
 const adSlotClassName =
@@ -115,7 +116,7 @@ export function AdsterraSmartlink() {
     <aside className={adSlotClassName} aria-label="Sponsor">
       <span className={adLabelClassName}>Sponsor</span>
       <a
-        href={`${ADSTERRA_HOST}/f12g9ctu?key=061c7594408bc94dd775b8d4148307ac`}
+        href={ADSTERRA_SMARTLINK_URL}
         target="_blank"
         rel="nofollow sponsored noopener noreferrer"
         className="text-foreground/70 hover:text-foreground block text-center text-sm underline decoration-dotted underline-offset-4 transition-colors"
@@ -123,6 +124,30 @@ export function AdsterraSmartlink() {
         Sponsor Filmanesia
       </a>
     </aside>
+  );
+}
+
+export function AdsterraPlayerGate({ onContinue }: { onContinue: () => void }) {
+  if (!IS_PRODUCTION) return null;
+
+  const handleContinue = () => {
+    window.open(ADSTERRA_SMARTLINK_URL, "_blank", "noopener,noreferrer");
+    onContinue();
+  };
+
+  return (
+    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/90 p-5 text-center text-white">
+      <div className="max-w-sm space-y-4">
+        <p className="text-sm text-white/70">Dukung Filmanesia agar tetap dapat menyediakan layanan ini.</p>
+        <button
+          type="button"
+          onClick={handleContinue}
+          className="rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+        >
+          Lanjutkan menonton
+        </button>
+      </div>
+    </div>
   );
 }
 

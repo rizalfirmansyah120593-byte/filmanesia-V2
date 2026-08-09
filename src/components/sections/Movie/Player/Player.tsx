@@ -1,4 +1,4 @@
-import { SpacingClasses } from "@/utils/constants";
+import { IS_PRODUCTION, SpacingClasses } from "@/utils/constants";
 import { siteConfig } from "@/config/site";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { cn } from "@/utils/helpers";
@@ -11,6 +11,7 @@ import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect, useMemo, useState } from "react";
 import { MovieDetails } from "tmdb-ts/dist/types/movies";
 import { usePlayerEvents } from "@/hooks/usePlayerEvents";
+import { AdsterraPlayerGate } from "@/components/ads/Adsterra";
 const AdsWarning = dynamic(() => import("@/components/ui/overlay/AdsWarning"));
 const MoviePlayerHeader = dynamic(() => import("./Header"));
 const MoviePlayerSourceSelection = dynamic(() => import("./SourceSelection"));
@@ -25,6 +26,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   const idle = useIdle(3000);
   const { mobile } = useBreakpoints();
   const [iframeReady, setIframeReady] = useState(false);
+  const [playerUnlocked, setPlayerUnlocked] = useState(() => !IS_PRODUCTION);
   const [opened, handlers] = useDisclosure(false);
   const [selectedSource, setSelectedSource] = useQueryState<number>(
     "src",
@@ -83,13 +85,13 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   };
 
   useEffect(() => {
-    if (iframeReady || lastEvent === "play") return;
+    if (!playerUnlocked || iframeReady || lastEvent === "play") return;
     const fallbackTimer = window.setTimeout(() => {
       if (!iframeReady) moveToNextSource();
     }, 8000);
 
     return () => window.clearTimeout(fallbackTimer);
-  }, [iframeReady, lastEvent, selectedSource, selectedSubtitle]);
+  }, [iframeReady, lastEvent, playerUnlocked, selectedSource, selectedSubtitle]);
 
   useEffect(() => {
     setIframeReady(false);
@@ -121,16 +123,17 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
         />
         <Card shadow="md" radius="none" className="relative aspect-video h-auto w-full">
           <Skeleton className="absolute h-full w-full" />
-          <iframe
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-            loading="eager"
-            key={PLAYER.title}
-            src={PLAYER.source}
-            onLoad={() => setIframeReady(true)}
-            onError={moveToNextSource}
-            className={cn("z-10 h-full w-full", { "pointer-events-none": idle && !mobile })}
-          />
+          {playerUnlocked && <iframe
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="eager"
+              key={PLAYER.title}
+              src={PLAYER.source}
+              onLoad={() => setIframeReady(true)}
+              onError={moveToNextSource}
+              className={cn("z-10 h-full w-full", { "pointer-events-none": idle && !mobile })}
+            />}
+          {!playerUnlocked && <AdsterraPlayerGate onContinue={() => setPlayerUnlocked(true)} />}
         </Card>
       </div>
 
