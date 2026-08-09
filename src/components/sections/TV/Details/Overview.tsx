@@ -91,7 +91,7 @@ export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({ tv
               <p>&#8226;</p>
               <Rating rate={tv.vote_average} count={tv.vote_count} />
             </div>
-            <Genres genres={tv.genres} type="tv" />
+            <Genres genres={tv.genres ?? []} type="tv" />
           </div>
 
           <div id="action" className="flex w-full flex-wrap justify-between gap-4 md:gap-0">
@@ -105,7 +105,7 @@ export const TvShowOverviewSection: React.FC<TvShowOverviewSectionProps> = ({ tv
               >
                 View Episodes
               </Button>
-              <Trailer color="warning" videos={tv.videos.results} />
+              <Trailer color="warning" videos={tv.videos?.results ?? []} />
             </div>
             <div className="flex flex-wrap gap-2">
               <ShareButton id={tv.id} title={title} type="tv" />

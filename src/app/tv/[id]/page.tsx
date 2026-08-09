@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { tmdb } from "@/api/tmdb";
 import { Cast } from "tmdb-ts/dist/types/credits";
 import { Image } from "tmdb-ts";
+import { cache } from "react";
 
 const PhotosSection = dynamic(() => import("@/components/ui/other/PhotosSection"));
 const TvShowRelatedSection = dynamic(() => import("@/components/sections/TV/Details/Related"));
@@ -14,11 +15,11 @@ const TvShowsSeasonsSelection = dynamic(() => import("@/components/sections/TV/D
 
 type Props = { params: Promise<{ id: string }> };
 
-async function getShow(id: number) {
+const getShow = cache(async (id: number): Promise<any> => {
   // Keep this request limited to appendable TMDB resources. Watch providers
   // use a separate endpoint and are not consumed by this page.
   return tmdb.tvShows.details(id, ["images", "videos", "credits", "recommendations", "similar"]);
-}
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -39,7 +40,7 @@ export default async function TVShowDetailPage({ params }: Props) {
   if (!Number.isInteger(id)) notFound();
   const tv = await getShow(id).catch(() => null);
   if (!tv) notFound();
-  const schema = { "@context": "https://schema.org", "@type": "TVSeries", name: tv.name, description: tv.overview, image: tv.poster_path ? `https://image.tmdb.org/t/p/w500${tv.poster_path}` : undefined, genre: tv.genres?.map((g) => g.name), dateCreated: tv.first_air_date };
+  const schema = { "@context": "https://schema.org", "@type": "TVSeries", name: tv.name, description: tv.overview, image: tv.poster_path ? `https://image.tmdb.org/t/p/w500${tv.poster_path}` : undefined, genre: tv.genres?.map((g: { name: string }) => g.name), dateCreated: tv.first_air_date };
   return <div className="mx-auto max-w-5xl">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <div className="flex flex-col gap-10">
