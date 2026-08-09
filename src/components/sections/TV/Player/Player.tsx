@@ -136,7 +136,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
           {...props}
         />
 
-        <Card shadow="md" radius="none" className="relative h-screen">
+        <Card shadow="md" radius="none" className="relative aspect-video h-auto w-full md:aspect-auto md:h-screen">
           <Skeleton className="absolute h-full w-full" />
           <iframe
             allow="autoplay; fullscreen; picture-in-picture"
@@ -146,7 +146,7 @@ const TvShowPlayer: React.FC<TvShowPlayerProps> = ({
             src={PLAYER.source}
             onLoad={() => setIframeReady(true)}
             onError={moveToNextSource}
-            className={cn("z-10 h-full", { "pointer-events-none": idle && !mobile })}
+            className={cn("z-10 h-full w-full", { "pointer-events-none": idle && !mobile })}
           />
         </Card>
       </div>
