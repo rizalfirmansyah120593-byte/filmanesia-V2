@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import { cn } from "@/utils/helpers";
 import { mutateMovieTitle } from "@/utils/movies";
-import { getMoviePlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
+import { DEFAULT_SUBTITLE_LANGUAGE, getMoviePlayers, SUBTITLE_OPTIONS, SubtitleLanguage } from "@/utils/players";
 import { Card, Skeleton } from "@heroui/react";
 import { useDisclosure, useDocumentTitle, useIdle } from "@mantine/hooks";
 import dynamic from "next/dynamic";
@@ -34,7 +34,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   );
   const [selectedSubtitle, setSelectedSubtitle] = useQueryState<SubtitleLanguage>(
     "sub",
-    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault("id"),
+    parseAsStringLiteral(SUBTITLE_OPTIONS.map(({ value }) => value)).withDefault(DEFAULT_SUBTITLE_LANGUAGE),
   );
 
   const players = getMoviePlayers(movie.id, startAt, selectedSubtitle);

@@ -10,6 +10,7 @@ export const SUBTITLE_OPTIONS = [
 ] as const;
 
 export type SubtitleLanguage = (typeof SUBTITLE_OPTIONS)[number]["value"];
+export const DEFAULT_SUBTITLE_LANGUAGE: SubtitleLanguage = "id";
 
 const addSubtitleLanguage = (source: string, subtitleLanguage: SubtitleLanguage): string => {
   if (subtitleLanguage === "off") return source;
@@ -51,7 +52,7 @@ const addDefaultQuality = (source: string): string =>
 export const getMoviePlayers = (
   id: string | number,
   startAt?: number,
-  subtitleLanguage: SubtitleLanguage = "id",
+  subtitleLanguage: SubtitleLanguage = DEFAULT_SUBTITLE_LANGUAGE,
 ): PlayersProps[] => {
   return [
     {
@@ -184,7 +185,7 @@ export const getTvShowPlayers = (
   season: number,
   episode: number,
   startAt?: number,
-  subtitleLanguage: SubtitleLanguage = "id",
+  subtitleLanguage: SubtitleLanguage = DEFAULT_SUBTITLE_LANGUAGE,
 ): PlayersProps[] => {
   return [
     {
