@@ -54,7 +54,7 @@ const MoviePlayerSourceSelection: React.FC<MoviePlayerSourceSelectionProps> = ({
         </div>
         <SelectButton
           label="Subtitle"
-          description="Pilih bahasa subtitle yang tersedia. Server akan menyesuaikan otomatis."
+          description="Subtitle diterapkan pada server yang sedang diputar."
           color="primary"
           groupType="list"
           value={selectedSubtitle}

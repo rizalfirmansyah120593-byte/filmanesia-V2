@@ -42,16 +42,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   const PLAYER = useMemo(() => players[selectedSource] || players[0], [players, selectedSource]);
 
   useEffect(() => {
-    if (selectedSubtitle === "off" || PLAYER.title === "VidLink") return;
-
-    const nextSource = players.findIndex((player) => player.title === "VidLink");
-
-    if (nextSource >= 0 && nextSource !== selectedSource) {
-      setSelectedSource(nextSource);
-    }
-  }, [PLAYER.title, players, selectedSource, selectedSubtitle, setSelectedSource]);
-
-  useEffect(() => {
     const cachedSource = Number(window.localStorage.getItem("filmanesia-working-movie-source"));
     if (selectedSource === 0 && Number.isInteger(cachedSource) && cachedSource > 0 && cachedSource < players.length) {
       setSelectedSource(cachedSource);
@@ -65,11 +55,6 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   }, [lastEvent, selectedSource]);
 
   const moveToNextSource = () => {
-    if (selectedSubtitle !== "off" && selectedSource >= 10) {
-      setSelectedSubtitle("off");
-      setSelectedSource(2);
-      return;
-    }
     const nextIndex = players.findIndex(
       (player, index) => index > selectedSource && (selectedSubtitle === "off" || player.supportsSubtitles),
     );
@@ -93,11 +78,7 @@ const MoviePlayer: React.FC<MoviePlayerProps> = ({ movie, startAt }) => {
   }, [PLAYER.source]);
 
   const handleSubtitleChange = (subtitle: SubtitleLanguage) => {
-    if (subtitle !== "off") {
-      const subtitleSource = players.findIndex((player) => player.title === "VidLink");
-      if (subtitleSource >= 0 && subtitleSource !== selectedSource) setSelectedSource(subtitleSource);
-    }
-
+    // Keep the current provider; only its subtitle URL/query changes.
     setSelectedSubtitle(subtitle);
   };
 

@@ -53,7 +53,7 @@ const TvShowPlayerSourceSelection: React.FC<TvShowPlayerSourceSelectionProps> = 
         </div>
         <SelectButton
           label="Subtitle"
-          description="Pilih bahasa subtitle yang tersedia. Server akan menyesuaikan otomatis."
+          description="Subtitle diterapkan pada server yang sedang diputar."
           color="warning"
           groupType="list"
           value={selectedSubtitle}
