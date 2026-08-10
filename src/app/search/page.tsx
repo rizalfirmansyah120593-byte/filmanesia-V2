@@ -6,6 +6,8 @@ const SearchList = dynamic(() => import("@/components/sections/Search/List"));
 
 export const metadata: Metadata = {
   title: `Search Movies | ${siteConfig.name}`,
+  alternates: { canonical: "/search" },
+  robots: { index: false, follow: true },
 };
 
 const SearchPage: NextPage = () => {

@@ -6,6 +6,8 @@ const DiscoverListGroup = dynamic(() => import("@/components/sections/Discover/L
 
 export const metadata: Metadata = {
   title: `Discover Movies | ${siteConfig.name}`,
+  alternates: { canonical: "/discover" },
+  robots: { index: false, follow: true },
 };
 
 const DiscoverPage: NextPage = () => {

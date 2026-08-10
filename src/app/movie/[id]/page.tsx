@@ -13,13 +13,21 @@ const CastsSection = dynamic(() => import("@/components/sections/Movie/Detail/Ca
 const RelatedSection = dynamic(() => import("@/components/sections/Movie/Detail/Related"));
 
 // 1. Generate Metadata untuk SEO per Halaman
-export async function generateMetadata({ params }: { params: Promise<{ id: number }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  try {
-    const movie = await tmdb.movies.details(id);
+  const movieId = Number(id);
+  if (!Number.isInteger(movieId) || movieId <= 0) {
     return {
-      title: `${movie.title} - Nonton Film Sub Indo HD | Filmanesia`,
+      title: "Film Tidak Ditemukan",
+      robots: { index: false, follow: false },
+    };
+  }
+  try {
+    const movie = await tmdb.movies.details(movieId);
+    return {
+      title: `${movie.title} - Nonton Film Sub Indo HD`,
       description: movie.overview?.substring(0, 160) || "Nonton film terbaru dengan kualitas HD.",
+      alternates: { canonical: `/movie/${movieId}` },
       openGraph: {
         title: movie.title,
         description: movie.overview || "",
@@ -27,16 +35,21 @@ export async function generateMetadata({ params }: { params: Promise<{ id: numbe
       },
     };
   } catch {
-    return { title: "Film Tidak Ditemukan" };
+    return {
+      title: "Film Tidak Ditemukan",
+      robots: { index: false, follow: false },
+    };
   }
 }
 
 // 2. Halaman Utama (Server Component)
-export default async function MovieDetailPage({ params }: { params: Promise<{ id: number }> }) {
+export default async function MovieDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const movieId = Number(id);
+  if (!Number.isInteger(movieId) || movieId <= 0) notFound();
 
   // Fetch data di server
-  const movie = await tmdb.movies.details(id, [
+  const movie = await tmdb.movies.details(movieId, [
     "images",
     "videos",
     "credits",

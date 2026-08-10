@@ -5,6 +5,8 @@ import { useDocumentTitle } from "@mantine/hooks";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 
+export const metadata = { robots: { index: false, follow: false } };
+
 export default function NotFound() {
   useDocumentTitle(`404 Not Found | ${siteConfig.name}`);
 
