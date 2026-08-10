@@ -53,10 +53,12 @@ function FixedSizeBanner({
   width,
   height,
   keyValue,
+  slotId = "main",
 }: {
   width: 468 | 728;
   height: 60 | 90;
   keyValue: string;
+  slotId?: string;
 }) {
   return (
     <aside
@@ -69,7 +71,7 @@ function FixedSizeBanner({
         className="max-w-full overflow-hidden"
         style={{ width: "100%", maxWidth: width, minHeight: height }}
       >
-        <Script id={`adsterra-options-${keyValue}`} strategy="lazyOnload">
+        <Script id={`adsterra-options-${keyValue}-${slotId}`} strategy="lazyOnload">
           {`window.atOptions = {
             key: '${keyValue}',
             format: 'iframe',
@@ -79,7 +81,7 @@ function FixedSizeBanner({
           };`}
         </Script>
         <Script
-          id={`adsterra-banner-${keyValue}`}
+          id={`adsterra-banner-${keyValue}-${slotId}`}
           strategy="lazyOnload"
           src={`${ADSTERRA_HOST}/${keyValue}/invoke.js`}
         />
@@ -102,10 +104,30 @@ export function AdsterraResponsiveBanner() {
 
   if (!IS_PRODUCTION || isDesktop === null) return null;
 
-  return isDesktop ? (
-    <FixedSizeBanner width={728} height={90} keyValue="d0adc488978c76a7ea53444f56d70cb8" />
-  ) : (
-    <FixedSizeBanner width={468} height={60} keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0" />
+  if (isDesktop) {
+    return (
+      <div className="grid w-full grid-cols-1 justify-items-center gap-3 lg:grid-cols-2">
+        <FixedSizeBanner
+          width={468}
+          height={60}
+          slotId="desktop-1"
+          keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0"
+        />
+        <FixedSizeBanner
+          width={468}
+          height={60}
+          slotId="desktop-2"
+          keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid w-full grid-cols-1 justify-items-center gap-3">
+      <FixedSizeBanner width={468} height={60} slotId="mobile-1" keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0" />
+      <FixedSizeBanner width={468} height={60} slotId="mobile-2" keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0" />
+    </div>
   );
 }
 
@@ -156,7 +178,7 @@ export function AdsterraPageAds() {
 
   return (
     <div
-      className="mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-3 pt-4 pb-8 sm:px-5"
+      className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-3 pt-5 pb-8 sm:px-5"
       data-ad-region
     >
       <AdsterraNativeBanner />
