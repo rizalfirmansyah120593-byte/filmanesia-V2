@@ -10,8 +10,6 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 import { use } from "react";
 
-export const metadata = { robots: { index: false, follow: false } };
-
 const MoviePlayerPage: NextPage<Params<{ id: number }>> = ({ params }) => {
   const { id } = use(params);
 
