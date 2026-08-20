@@ -106,7 +106,7 @@ export function AdsterraResponsiveBanner() {
 
   if (isDesktop) {
     return (
-      <div className="grid w-full grid-cols-1 justify-items-center gap-3 lg:grid-cols-2">
+    <div className="grid min-h-[144px] w-full grid-cols-1 justify-items-center gap-3 lg:grid-cols-2">
         <FixedSizeBanner
           width={468}
           height={60}
@@ -124,7 +124,7 @@ export function AdsterraResponsiveBanner() {
   }
 
   return (
-    <div className="grid w-full grid-cols-1 justify-items-center gap-3">
+    <div className="grid min-h-[144px] w-full grid-cols-1 justify-items-center gap-3">
       <FixedSizeBanner width={468} height={60} slotId="mobile-1" keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0" />
       <FixedSizeBanner width={468} height={60} slotId="mobile-2" keyValue="7ce1a4afe9d87e9ae5af352a18edf6d0" />
     </div>

@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { Poppins } from "@/utils/fonts";
 import "../styles/globals.css";
-import "../styles/lightbox.css";
 import Providers from "./providers";
 import TopNavbar from "@/components/ui/layout/TopNavbar";
 import BottomNavbar from "@/components/ui/layout/BottomNavbar";
@@ -17,7 +16,11 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import { AdsterraGlobalScripts, AdsterraPageAds } from "@/components/ads/Adsterra";
 
-const Disclaimer = dynamic(() => import("@/components/ui/overlay/Disclaimer"));
+// The disclaimer is not part of the page's critical content. Keep HeroUI's
+// modal code out of the initial server/client render and load it after hydration.
+const Disclaimer = dynamic(() => import("@/components/ui/overlay/Disclaimer"), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   // Gunakan 'template' agar judul halaman bisa berubah di setiap page
