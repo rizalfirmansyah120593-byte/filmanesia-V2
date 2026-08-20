@@ -1,5 +1,3 @@
-"use client";
-
 import type { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { Poppins } from "@/utils/fonts";
