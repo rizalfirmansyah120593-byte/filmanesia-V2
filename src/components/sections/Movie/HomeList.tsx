@@ -19,7 +19,7 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
   });
 
   return (
-    <section id={key} className="min-h-[250px] md:min-h-[300px]">
+    <section id={key} className="min-h-[250px] content-visibility-auto md:min-h-[300px]">
       {isLoading ? (
         <div className="flex w-full flex-col gap-5">
           <div className="flex grow items-center justify-between">
@@ -41,12 +41,12 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
               <div className="trending-marquee-track group-hover:[animation-play-state:paused] motion-reduce:animate-none">
                 {(data?.results ?? []).map((movie, index) => (
                   <div key={movie.id} className="trending-item flex min-h-fit w-full shrink-0 items-center justify-center py-2 md:w-auto">
-                    <MoviePosterCard movie={movie} isPriority={index < 8} />
+                    <MoviePosterCard movie={movie} isPriority={index === 0} />
                   </div>
                 ))}
                 {(data?.results ?? []).map((movie, index) => (
                   <div key={`${movie.id}-loop`} className="trending-loop-item flex min-h-fit w-full shrink-0 items-center justify-center py-2 md:w-auto">
-                    <MoviePosterCard movie={movie} isPriority={false} />
+                <MoviePosterCard movie={movie} isPriority={false} />
                   </div>
                 ))}
               </div>
@@ -55,7 +55,7 @@ const MovieHomeList: React.FC<QueryList<Movie>> = ({ query, name, param }) => {
             <Carousel>
               {data?.results?.map((movie, index) => (
                 <div key={movie.id} className="embla__slide flex min-h-fit max-w-fit items-center px-1 py-2">
-                  <MoviePosterCard movie={movie} isPriority={index < 4} />
+                <MoviePosterCard movie={movie} isPriority={index === 0} />
                 </div>
               ))}
             </Carousel>
