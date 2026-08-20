@@ -35,7 +35,11 @@ export function AdsterraNativeBanner() {
   if (!IS_PRODUCTION) return null;
 
   return (
-    <aside className={adSlotClassName} aria-label="Iklan" data-ad-slot="native-banner">
+    <aside
+      className={`${adSlotClassName} min-h-[100px]`}
+      aria-label="Iklan"
+      data-ad-slot="native-banner"
+    >
       <span className={adLabelClassName}>Iklan</span>
       <Script
         id="adsterra-native-banner"
@@ -182,7 +186,9 @@ export function AdsterraPageAds() {
       data-ad-region
     >
       <AdsterraNativeBanner />
-      <AdsterraResponsiveBanner />
+      <div className="min-h-[144px] w-full">
+        <AdsterraResponsiveBanner />
+      </div>
       <AdsterraSmartlink />
     </div>
   );
