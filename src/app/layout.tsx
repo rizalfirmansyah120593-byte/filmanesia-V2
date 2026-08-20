@@ -18,11 +18,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import { AdsterraGlobalScripts, AdsterraPageAds } from "@/components/ads/Adsterra";
 
-// The disclaimer is not part of the page's critical content. Keep HeroUI's
-// modal code out of the initial server/client render and load it after hydration.
-const Disclaimer = dynamic(() => import("@/components/ui/overlay/Disclaimer"), {
-  ssr: false,
-});
+const DisclaimerLoader = dynamic(() => import("@/components/ui/overlay/DisclaimerLoader"));
 
 export const metadata: Metadata = {
   // Gunakan 'template' agar judul halaman bisa berubah di setiap page
@@ -111,7 +107,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Suspense>
           <NuqsAdapter>
             <Providers>
-              {IS_PRODUCTION && <Disclaimer />}
+              {IS_PRODUCTION && <DisclaimerLoader />}
               <TopNavbar />
               <Sidebar>
                 <div className="min-w-0 flex-1">
